@@ -2,6 +2,31 @@
 
 Una **Guest Guide interattiva** per il tuo Bed & Breakfast — un singolo file `index.html` da deployare su GitHub Pages, con supporto bilingue IT/EN e un pannello di personalizzazione integrato.
 
+---
+
+## ▶️ Cosa fare adesso per vedere il sito
+
+> Segui questi **3 passi** — bastano 5 minuti.
+
+**Passo 1 — Fai il merge di questa Pull Request**
+- Apri la [Pull Request #1](../../pull/1) su GitHub
+- Se è marcata come *Draft*, clicca **"Ready for review"**
+- Poi clicca **"Merge pull request"** → **"Confirm merge"**
+
+**Passo 2 — Attiva GitHub Pages**
+- Vai su **Settings** (menu in alto nel tuo repository)
+- Nel menu laterale clicca **Pages**
+- Sotto *Source* seleziona **GitHub Actions**
+- Clicca **Save**
+
+**Passo 3 — Aspetta 1-2 minuti e apri il link**
+- Vai su **Actions** (menu in alto) e attendi che il deployment finisca (cerchio verde ✅)
+- Il sito sarà live su: **`https://augustof2.github.io/guestguide-bnb/`**
+
+> 💡 Dopo aver aperto il sito, clicca il pulsante **⚙️** in basso a destra per personalizzare nome, appartamenti, WiFi, luoghi e tutto il resto — senza toccare il codice.
+
+---
+
 ![Landing Page](https://github.com/user-attachments/assets/ee2fe4ec-a0c4-4ac8-afba-e66ebaec33bb)
 
 ---
