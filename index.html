@@ -47,26 +47,29 @@
 
   @media (min-width: 768px) {
     .app-shell {
-      max-width: 640px;
+      max-width: 680px;
       box-shadow: 0 0 80px rgba(0,0,0,.6);
       border-left: 1px solid var(--border);
       border-right: 1px solid var(--border);
     }
-    .bottom-nav { max-width: 640px; }
-    #settings-panel { max-width: 640px; left: 50%; transform: translateX(-50%); }
-    .pin-dialog { width: 360px; }
-    .landing-title { font-size: 52px; }
-    .apt-card { padding: 22px 20px; }
+    .bottom-nav { max-width: 680px; }
+    #settings-panel { max-width: 680px; left: 50%; transform: translateX(-50%); }
+    .pin-dialog { width: 380px; }
+    .gear-btn { right: max(20px, calc((100vw - 680px)/2 + 20px)); }
   }
 
   @media (min-width: 1024px) {
-    .app-shell {
-      max-width: 720px;
-    }
-    .bottom-nav { max-width: 720px; }
-    #settings-panel { max-width: 720px; }
-    .landing-title { font-size: 58px; }
-    .section-title { font-size: 30px; }
+    .app-shell { max-width: 860px; }
+    .bottom-nav { max-width: 860px; }
+    #settings-panel { max-width: 860px; }
+    .gear-btn { right: max(20px, calc((100vw - 860px)/2 + 20px)); }
+  }
+
+  @media (min-width: 1440px) {
+    .app-shell { max-width: 980px; }
+    .bottom-nav { max-width: 980px; }
+    #settings-panel { max-width: 980px; }
+    .gear-btn { right: max(20px, calc((100vw - 980px)/2 + 20px)); }
   }
 
   @keyframes fadeUp {
@@ -1139,6 +1142,90 @@
     justify-content: space-between;
     flex: 1;
     gap: 8px;
+  }
+
+  /* ── RESPONSIVE COMPONENTS: TABLET (≥768px) ────────── */
+  @media (min-width: 768px) {
+    /* Landing */
+    .landing-title { font-size: 54px; }
+    .landing-hero { padding: 44px 36px 24px; }
+    .landing-intro { padding: 0 36px 32px; font-size: 15px; }
+    .apt-cards { display: grid; grid-template-columns: 1fr 1fr; padding: 0 24px; gap: 14px; }
+    .apt-card { padding: 22px 20px; }
+    /* Guide header */
+    .guide-header { padding: 16px 24px; }
+    /* Home tab */
+    .home-hero { padding: 40px 36px 36px; }
+    .home-apt-title { font-size: 42px; }
+    .stats-grid { grid-template-columns: repeat(4, 1fr); padding: 24px 36px; gap: 14px; }
+    .welcome-card { margin: 0 36px 16px; }
+    .quick-nav { padding: 4px 36px 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .quick-nav-title { grid-column: 1 / -1; }
+    .quick-nav-card { margin-bottom: 0; }
+    /* Sections */
+    .tab-header { padding: 32px 36px 0; }
+    .section-pad { padding: 28px 36px; }
+    .section-title { font-size: 28px; }
+    /* Stay tab */
+    .service-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  /* ── RESPONSIVE COMPONENTS: DESKTOP (≥1024px) ──────── */
+  @media (min-width: 1024px) {
+    /* Landing */
+    .landing-title { font-size: 64px; }
+    .landing-hero { padding: 56px 48px 28px; }
+    .landing-intro { padding: 0 48px 40px; font-size: 16px; }
+    .apt-cards { padding: 0 32px; gap: 16px; }
+    .apt-card { padding: 24px 22px; }
+    /* Guide header */
+    .guide-header { padding: 18px 32px; }
+    .guide-apt-name { font-size: 20px; }
+    /* Home tab */
+    .home-hero { padding: 52px 48px 44px; }
+    .home-apt-title { font-size: 52px; }
+    .stats-grid { padding: 28px 48px; gap: 16px; }
+    .stat-card { padding: 20px 18px; }
+    .stat-icon { font-size: 24px; }
+    .stat-value { font-size: 17px; }
+    .welcome-card { margin: 0 48px 18px; padding: 28px 26px; }
+    .welcome-title { font-size: 26px; }
+    .welcome-text { font-size: 15px; }
+    .quick-nav { padding: 4px 48px 28px; }
+    .quick-nav-label { font-size: 16px; }
+    .quick-nav-desc { font-size: 13px; }
+    /* Sections */
+    .section-title { font-size: 32px; }
+    .section-sub { font-size: 14px; }
+    .tab-header { padding: 40px 48px 0; }
+    .section-pad { padding: 32px 48px; }
+    /* Stay tab */
+    .service-grid { grid-template-columns: repeat(4, 1fr); }
+    .amenity-tags .tag { font-size: 13px; padding: 5px 14px; }
+    /* Places & Food: 2-column grid */
+    #places-container { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    #places-container .place-card { margin-bottom: 0; }
+    #food-container { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    #food-container .restaurant-card,
+    #food-container .supermercato-card { margin-bottom: 0; }
+    /* Settings panel */
+    .settings-actions { grid-template-columns: repeat(4, 1fr); }
+  }
+
+  /* ── RESPONSIVE COMPONENTS: LARGE DESKTOP (≥1440px) ── */
+  @media (min-width: 1440px) {
+    .landing-title { font-size: 72px; }
+    .landing-hero { padding: 64px 56px 32px; }
+    .landing-intro { padding: 0 56px 44px; }
+    .apt-cards { padding: 0 40px; }
+    .home-hero { padding: 60px 56px 50px; }
+    .home-apt-title { font-size: 58px; }
+    .stats-grid { padding: 32px 56px; gap: 18px; }
+    .welcome-card { margin: 0 56px 20px; }
+    .quick-nav { padding: 4px 56px 32px; }
+    .tab-header { padding: 48px 56px 0; }
+    .section-pad { padding: 36px 56px; }
+    .section-title { font-size: 36px; }
   }
 </style>
 </head>
