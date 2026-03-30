@@ -1936,12 +1936,12 @@ function loadData() {
       // Migrate global places/restaurants/transport/checkoutSteps to per-apt
       if (stored.apts && Array.isArray(stored.apts)) {
         stored.apts.forEach(apt => {
-          if (!apt.places && stored.places) apt.places = stored.places;
-          if (!apt.restaurants && stored.restaurants) apt.restaurants = stored.restaurants;
-          if (apt.supermarketIt === undefined && stored.supermarketIt) apt.supermarketIt = stored.supermarketIt;
+          if (apt.places === undefined && stored.places !== undefined) apt.places = stored.places;
+          if (apt.restaurants === undefined && stored.restaurants !== undefined) apt.restaurants = stored.restaurants;
+          if (apt.supermarketIt === undefined && stored.supermarketIt !== undefined) apt.supermarketIt = stored.supermarketIt;
           if (apt.supermarketMaps === undefined && stored.supermarketMaps !== undefined) apt.supermarketMaps = stored.supermarketMaps;
-          if (!apt.transport && stored.transport) apt.transport = stored.transport;
-          if (!apt.checkoutSteps && stored.checkoutSteps) apt.checkoutSteps = stored.checkoutSteps;
+          if (apt.transport === undefined && stored.transport !== undefined) apt.transport = stored.transport;
+          if (apt.checkoutSteps === undefined && stored.checkoutSteps !== undefined) apt.checkoutSteps = stored.checkoutSteps;
         });
       }
       return mergeWithDefaults(stored, DEFAULT_DATA);
@@ -2353,7 +2353,7 @@ function renderDeparture(d, checkoutSteps) {
   const stepsContainer = document.getElementById('departure-steps-list');
   if (stepsContainer) {
     stepsContainer.innerHTML = '';
-    (checkoutSteps || d.checkoutSteps || []).forEach((step, i) => {
+    (checkoutSteps || []).forEach((step, i) => {
       const title = step.titleIt || '';
       const desc = step.descIt || '';
       const item = document.createElement('div');
@@ -2662,7 +2662,28 @@ function collectSettingsApts() {
 function addSettingsApt() {
   const current = collectSettingsApts();
   const n = current.length + 1;
-  current.push({ name: `Appartamento ${n}`, address: '', addressShort: '', mapsLink: '', maxGuests: '4 persone', wifi: '', wifiPass: '', checkin: '15:00', checkout: '10:00', howToReachIt: '', howToAccessIt: '', parkingIt: '', houseRules: [], bedroomTagsIt: '', kitchenTagsIt: '', bathroomTagsIt: '', extraServices: [], places: [], restaurants: [], supermarketIt: '', supermarketMaps: '', transport: { airportEnabled: true, airportIcon: '✈️', airportIt: '', airportMaps: '', stationEnabled: true, stationIcon: '🚉', stationIt: '', stationMaps: '', metroEnabled: true, metroIcon: '🚇', metroIt: '', metroMaps: '', busEnabled: true, busIcon: '🚌', busIt: '', busMaps: '', ticketsIt: '', taxiIt: '' }, checkoutSteps: [] });
+  current.push({
+    name: `Appartamento ${n}`,
+    address: '', addressShort: '', mapsLink: '',
+    maxGuests: '4 persone',
+    wifi: '', wifiPass: '',
+    checkin: '15:00', checkout: '10:00',
+    howToReachIt: '', howToAccessIt: '', parkingIt: '',
+    houseRules: [],
+    bedroomTagsIt: '', kitchenTagsIt: '', bathroomTagsIt: '',
+    extraServices: [],
+    places: [],
+    restaurants: [],
+    supermarketIt: '', supermarketMaps: '',
+    transport: {
+      airportEnabled: true, airportIcon: '✈️', airportIt: '', airportMaps: '',
+      stationEnabled: true, stationIcon: '🚉', stationIt: '', stationMaps: '',
+      metroEnabled: true, metroIcon: '🚇', metroIt: '', metroMaps: '',
+      busEnabled: true, busIcon: '🚌', busIt: '', busMaps: '',
+      ticketsIt: '', taxiIt: ''
+    },
+    checkoutSteps: []
+  });
   renderSettingsApts(current);
   const last = document.getElementById('s-apts-container').lastElementChild;
   if (last) { last.open = true; last.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
@@ -3186,9 +3207,6 @@ function populateSettingsForms() {
   document.getElementById('s-closingTitleIt').value = d.closingTitleIt || '';
   document.getElementById('s-closingTextIt').value = d.closingTextIt || '';
 
-  // Checkout steps (dynamic)
-  renderSettingsCheckoutSteps(d.checkoutSteps || []);
-
   // Apts (dynamic)
   renderSettingsApts(d.apts);
 
@@ -3236,9 +3254,6 @@ function collectFormData() {
   d.googleReviewUrl = document.getElementById('s-googleReviewUrl').value.trim();
   d.closingTitleIt = document.getElementById('s-closingTitleIt').value.trim();
   d.closingTextIt = document.getElementById('s-closingTextIt').value.trim();
-
-  // Checkout steps
-  d.checkoutSteps = collectSettingsCheckoutSteps();
 
   // Dynamic apts
   d.apts = collectSettingsApts();
