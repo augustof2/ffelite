@@ -3295,6 +3295,8 @@ function collectSettingsApts() {
     apt.restaurants = collectAptRests(i);
     const superEl = document.getElementById(`s-a${i}-supermarketIt`);
     apt.supermarketIt = superEl ? superEl.value.trim() : '';
+    const superEnEl = document.getElementById(`s-a${i}-supermarketEn`);
+    apt.supermarketEn = superEnEl ? superEnEl.value.trim() : '';
     const superMapsEl = document.getElementById(`s-a${i}-supermarketMaps`);
     apt.supermarketMaps = superMapsEl ? superMapsEl.value.trim() : '';
     apt.transport = collectAptTransport(i);
@@ -3313,19 +3315,19 @@ function addSettingsApt() {
     maxGuests: '4 persone',
     wifi: '', wifiPass: '',
     checkin: '15:00', checkout: '10:00',
-    howToReachIt: '', howToAccessIt: '', parkingIt: '',
+    howToReachIt: '', howToReachEn: '', howToAccessIt: '', howToAccessEn: '', parkingIt: '', parkingEn: '',
     houseRules: [],
-    bedroomTagsIt: '', kitchenTagsIt: '', bathroomTagsIt: '',
+    bedroomTagsIt: '', bedroomTagsEn: '', kitchenTagsIt: '', kitchenTagsEn: '', bathroomTagsIt: '', bathroomTagsEn: '',
     extraServices: [],
     places: [],
     restaurants: [],
-    supermarketIt: '', supermarketMaps: '',
+    supermarketIt: '', supermarketEn: '', supermarketMaps: '',
     transport: {
-      airportEnabled: true, airportIcon: '✈️', airportIt: '', airportMaps: '',
-      stationEnabled: true, stationIcon: '🚉', stationIt: '', stationMaps: '',
-      metroEnabled: true, metroIcon: '🚇', metroIt: '', metroMaps: '',
-      busEnabled: true, busIcon: '🚌', busIt: '', busMaps: '',
-      ticketsIt: '', taxiIt: ''
+      airportEnabled: true, airportIcon: '✈️', airportIt: '', airportEn: '', airportMaps: '',
+      stationEnabled: true, stationIcon: '🚉', stationIt: '', stationEn: '', stationMaps: '',
+      metroEnabled: true, metroIcon: '🚇', metroIt: '', metroEn: '', metroMaps: '',
+      busEnabled: true, busIcon: '🚌', busIt: '', busEn: '', busMaps: '',
+      ticketsIt: '', ticketsEn: '', taxiIt: '', taxiEn: ''
     },
     checkoutSteps: []
   });
@@ -3538,7 +3540,7 @@ function collectAptRests(aptIndex) {
 
 function addAptRest(aptIndex) {
   const current = collectAptRests(aptIndex);
-  current.push({ name: '', emoji: '🍽️', tipo: '', descIt: '', price: '€€', maps: '#' });
+  current.push({ name: '', emoji: '🍽️', tipo: '', descIt: '', descEn: '', price: '€€', maps: '#' });
   renderAptRests(aptIndex, current);
 }
 
@@ -3595,8 +3597,10 @@ function renderAptCheckoutSteps(aptIndex, steps) {
         <span>Passo ${j + 1}</span>
         <button class="s-remove-btn" onclick="removeAptCheckoutStep(${aptIndex}, ${j})">🗑️ Rimuovi</button>
       </div>
-      <div class="s-field"><label>Titolo</label><input type="text" id="s-a${aptIndex}-cs${j}-titleIt" value="${escAttr(step.titleIt || '')}"></div>
-      <div class="s-field"><label>Descrizione</label><textarea id="s-a${aptIndex}-cs${j}-descIt">${escHtml(step.descIt || '')}</textarea></div>`;
+      <div class="s-field"><label>Titolo (IT)</label><input type="text" id="s-a${aptIndex}-cs${j}-titleIt" value="${escAttr(step.titleIt || '')}"></div>
+      <div class="s-field"><label>Title (EN)</label><input type="text" id="s-a${aptIndex}-cs${j}-titleEn" value="${escAttr(step.titleEn || '')}"></div>
+      <div class="s-field"><label>Descrizione (IT)</label><textarea id="s-a${aptIndex}-cs${j}-descIt">${escHtml(step.descIt || '')}</textarea></div>
+      <div class="s-field"><label>Description (EN)</label><textarea id="s-a${aptIndex}-cs${j}-descEn">${escHtml(step.descEn || '')}</textarea></div>`;
   });
   container.innerHTML = html;
 }
@@ -3608,19 +3612,14 @@ function collectAptCheckoutSteps(aptIndex) {
   const steps = [];
   for (let j = 0; j < count; j++) {
     const step = {};
-    ['titleIt', 'descIt'].forEach(k => {
-      const el = document.getElementById(`s-a${aptIndex}-cs${j}-${k}`);
-      if (el) step[k] = el.value;
-    });
-    steps.push(step);
+    ['titleIt', 'titleEn', 'descIt', 'descEn'].forEach(k => {
   }
   return steps;
 }
 
 function addAptCheckoutStep(aptIndex) {
   const current = collectAptCheckoutSteps(aptIndex);
-  current.push({ titleIt: '', descIt: '' });
-  renderAptCheckoutSteps(aptIndex, current);
+  current.push({ titleIt: '', titleEn: '', descIt: '', descEn: '' });
 }
 
 function removeAptCheckoutStep(aptIndex, stepIdx) {
