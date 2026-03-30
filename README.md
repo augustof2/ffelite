@@ -29,15 +29,19 @@ Una **Guest Guide interattiva** per il tuo Bed & Breakfast — un singolo file `
 
 ## 🌐 Come rendere visibili le tue personalizzazioni a tutti
 
-Le personalizzazioni fatte tramite il pannello ⚙️ sono salvate nel tuo browser (`localStorage`). Per pubblicarle online in modo che **tutti** vedano la versione aggiornata, segui questi passi:
+Le personalizzazioni fatte tramite il pannello ⚙️ sono salvate nel tuo browser (`localStorage`).
+I dati sono visibili e modificabili **esclusivamente tramite il pannello admin** (protetto da PIN).
 
-**1. Personalizza il sito** — Apri `https://augustof2.github.io/guestguide-bnb/`, clicca ⚙️ e modifica tutti i campi. Poi clicca **💾 Salva e Applica**.
+**Come personalizzare il sito:**
 
-**2. Scarica l'HTML aggiornato** — Nel pannello ⚙️, clicca il pulsante **📥 Scarica HTML Aggiornato**. Verrà scaricato un file `index.html` con i tuoi dati incorporati.
+**1. Personalizza il sito** — Apri `https://augustof2.github.io/guestguide-bnb/`, clicca ⚙️, inserisci il PIN e modifica tutti i campi. Poi clicca **💾 Salva e Applica**.
 
-**3. Carica su GitHub** — Vai su `https://github.com/augustof2/guestguide-bnb`, clicca sul file `index.html`, poi su ✏️ **Edit**, e incolla il contenuto del file scaricato. Oppure, se usi Git:
+**2. Fai un backup** — Nel pannello ⚙️, clicca **📋 Esporta JSON** per salvare una copia dei tuoi dati. Puoi reimportarli su un altro dispositivo con **📂 Importa JSON**.
+
+**3. Aggiorna il sorgente (facoltativo, solo per l'admin)** — Se vuoi aggiornare i dati predefiniti nel codice sorgente, modifica `src/index.html` (file privato, non presente nel repo pubblico), poi esegui il build in locale e carica il nuovo `index.html`:
 ```bash
-# Copia il file scaricato nella cartella del repo, poi:
+npm install       # solo la prima volta
+npm run build     # genera index.html offuscato dal sorgente privato
 git add index.html
 git commit -m "Aggiorna dati B&B"
 git push
@@ -98,17 +102,17 @@ Il repository include un workflow GitHub Actions che pubblica automaticamente il
 5. Usa **📋 Esporta JSON** per fare un backup delle impostazioni
 6. Usa **🗑️ Reset** per tornare ai valori predefiniti
 
-### Metodo 2: Modifica Diretta del File Sorgente
+### Metodo 2: Modifica Diretta del File Sorgente (solo per l'admin)
 
-Modifica `src/index.html` (il sorgente leggibile) e poi rigenera `index.html` con:
+Hai accesso al file sorgente privato `src/index.html`? Modificalo e poi rigenera `index.html` con:
 
 ```bash
 npm install       # solo la prima volta
-npm run build     # genera index.html offuscato
+npm run build     # genera index.html offuscato dal sorgente privato
 ```
 
-> ⚠️ **Non modificare `index.html` direttamente** — viene sovrascritto ad ogni build.  
-> Tutte le modifiche vanno fatte in `src/index.html`.
+> ⚠️ `src/index.html` è nel `.gitignore` — non viene mai pubblicato nel repository pubblico.  
+> **Non modificare `index.html` direttamente** — viene sovrascritto ad ogni build.
 
 ---
 
@@ -116,6 +120,8 @@ npm run build     # genera index.html offuscato
 
 Il progetto include un sistema di build che produce un `index.html` **protetto e offuscato**:
 
+- **Sorgente privato** — `src/index.html` è nel `.gitignore` e non viene mai pubblicato nel repository. Chiunque acceda al repo vede solo il codice offuscato.
+- **Dati visibili e modificabili solo tramite admin panel** — tutta la configurazione (nome B&B, WiFi, appartamenti, ecc.) è accessibile esclusivamente tramite il pannello ⚙️ protetto da PIN; non esiste più il tasto "Scarica HTML Aggiornato" che esponeva i dati in chiaro.
 - **JavaScript offuscato** — il codice JS viene trasformato con [javascript-obfuscator](https://github.com/javascript-obfuscator/javascript-obfuscator): nomi di variabili e funzioni rimpiazzati con identificatori esadecimali, stringhe cifrate con RC4, control flow appiattito.
 - **PIN admin con SHA-256** — il PIN di accesso al pannello di personalizzazione viene conservato come hash SHA-256 nel `localStorage`, non in chiaro.
 - **Content Security Policy** — meta tag CSP che limita le sorgenti di script, stili e font; blocca il caricamento in iframe (`frame-ancestors 'none'`).
@@ -124,12 +130,12 @@ Il progetto include un sistema di build che produce un `index.html` **protetto e
 ### Flusso di lavoro consigliato
 
 ```
-src/index.html   ←── modifica qui (sorgente leggibile)
+src/index.html   ←── modifica qui (PRIVATO, solo in locale, non nel repo)
        │
    npm run build
        │
        ▼
-index.html       ←── deployato (offuscato + sicuro)
+index.html       ←── committato e deployato (offuscato + sicuro)
 ```
 
 ---
@@ -138,13 +144,16 @@ index.html       ←── deployato (offuscato + sicuro)
 
 ```
 guestguide-bnb/
-├── src/
-│   └── index.html                ← sorgente leggibile (modifica qui)
-├── index.html                    ← output offuscato (generato da build.js)
+├── index.html                    ← output offuscato (generato da build.js, committato)
 ├── build.js                      ← script di build/offuscamento
 ├── package.json                  ← dipendenze (javascript-obfuscator)
+├── .gitignore                    ← esclude node_modules/ e src/
 ├── .nojekyll                     ← disabilita Jekyll su GitHub Pages
 └── .github/workflows/deploy.yml ← auto-deploy su GitHub Pages
+
+# Solo in locale (non nel repo):
+src/
+└── index.html                    ← sorgente leggibile (PRIVATO)
 ```
 
 ---

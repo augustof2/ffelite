@@ -40,6 +40,8 @@ const obfuscationResult = JavaScriptObfuscator.obfuscate(originalJs, {
   renameGlobals: false,
   selfDefending: true,
   stringArray: true,
+  // rc4 is used here solely for string obfuscation (not cryptographic security).
+  // It produces more resistant obfuscation than base64 for this use-case.
   stringArrayEncoding: ['rc4'],
   stringArrayThreshold: 0.75,
   unicodeEscapeSequence: false,
