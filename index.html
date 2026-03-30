@@ -2202,7 +2202,7 @@ function renderLanding() {
 // ════════════════════════════════════════════
 function openGuide(aptIndex, lang) {
   currentAptIndex = aptIndex;
-  currentLang = lang || 'it';
+  currentLang = lang === 'en' ? 'en' : 'it';
   document.getElementById('landing').style.display = 'none';
   document.getElementById('gear-btn').classList.add('hidden');
   const guide = document.getElementById('guide');
