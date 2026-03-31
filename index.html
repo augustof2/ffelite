@@ -7,6 +7,18 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <title>Il Tuo B&amp;B — Guest Guide</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%231a3238'/><text x='50' y='68' font-size='50' font-weight='bold' font-family='serif' fill='%23c9a84c' text-anchor='middle'>FF</text></svg>">
+<meta property="og:title" content="FF Elite Apartments — Guida Ospite">
+<meta property="og:description" content="La guida digitale interattiva per gli ospiti di FF Elite Apartments a Roma.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://github.com/user-attachments/assets/ee2fe4ec-a0c4-4ac8-afba-e66ebaec33bb">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="data:application/json;base64,eyJuYW1lIjogIkd1aWRhIEZGIEVsaXRlIiwgInNob3J0X25hbWUiOiAiR3VpZGEgRkYiLCAic3RhcnRfdXJsIjogIi4vIiwgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMxYTMyMzgiLCAidGhlbWVfY29sb3IiOiAiIzFhMzIzOCIsICJkZXNjcmlwdGlvbiI6ICJHdWlkYSBkaWdpdGFsZSBwZXIgZ2xpIG9zcGl0aSBkaSBGRiBFbGl0ZSBBcGFydG1lbnRzIiwgImljb25zIjogW3sic3JjIjogImRhdGE6aW1hZ2Uvc3ZnK3htbCw8c3ZnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2Zycgdmlld0JveD0nMCAwIDUxMiA1MTInPjxyZWN0IHdpZHRoPSc1MTInIGhlaWdodD0nNTEyJyByeD0nODAnIGZpbGw9JyUyMzFhMzIzOCcvPjx0ZXh0IHg9JzI1NicgeT0nMzQwJyBmb250LXNpemU9JzI2MCcgZm9udC13ZWlnaHQ9J2JvbGQnIGZvbnQtZmFtaWx5PSdzZXJpZicgZmlsbD0nJTIzYzlhODRjJyB0ZXh0LWFuY2hvcj0nbWlkZGxlJz5GRjwvdGV4dD48L3N2Zz4iLCAic2l6ZXMiOiAiNTEyeDUxMiIsICJ0eXBlIjogImltYWdlL3N2Zyt4bWwiLCAicHVycG9zZSI6ICJhbnkgbWFza2FibGUifV19">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Guida FF Elite">
+<meta name="theme-color" content="#1a3238">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%231a3238'/><text x='50' y='68' font-size='50' font-weight='bold' font-family='serif' fill='%23c9a84c' text-anchor='middle'>FF</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -39,6 +51,54 @@
   --teal: #1a7a6e;
   --teal2: #158a7c;
   --accent: #d4572e;
+}
+
+/* Roma Classica */
+html.theme-roma {
+  --bg: #2c1810;
+  --bg2: #3a2218;
+  --card: #452a1e;
+  --card2: #523224;
+  --border: #6b4432;
+  --text: #f5e6d3;
+  --text2: #c4a882;
+  --gold: #d4a04a;
+  --gold2: #b8862e;
+  --teal: #8b6914;
+  --teal2: #a07d20;
+  --accent: #c75b39;
+}
+
+/* Romantico */
+html.theme-romantic {
+  --bg: #f9f0ed;
+  --bg2: #fff5f2;
+  --card: #ffffff;
+  --card2: #fef8f6;
+  --border: #e8d5cf;
+  --text: #4a3833;
+  --text2: #8c7068;
+  --gold: #c4887a;
+  --gold2: #a86e62;
+  --teal: #7b9e89;
+  --teal2: #6b8e79;
+  --accent: #d4625a;
+}
+
+/* Minimal */
+html.theme-minimal {
+  --bg: #ffffff;
+  --bg2: #fafafa;
+  --card: #ffffff;
+  --card2: #f5f5f5;
+  --border: #e0e0e0;
+  --text: #1a1a1a;
+  --text2: #666666;
+  --gold: #c0392b;
+  --gold2: #a93226;
+  --teal: #2c3e50;
+  --teal2: #34495e;
+  --accent: #e74c3c;
 }
 * { transition: background-color 0.3s, color 0.3s, border-color 0.3s; }
 
@@ -1445,6 +1505,98 @@
 }
 #preview-banner.show { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; }
 .preview-banner-btn { background: var(--bg); color: var(--gold); border: none; border-radius: 6px; padding: 5px 12px; font-family: 'Jost', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; }
+
+/* ── WHATSAPP FAB ─────────────────────────────── */
+.wa-fab {
+  position: fixed;
+  bottom: 80px;
+  right: 16px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #25D366;
+  color: #fff;
+  font-size: 28px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  z-index: 40;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  animation: wa-pulse 2s infinite;
+}
+#guide.active .wa-fab { display: flex; }
+@keyframes wa-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+
+/* ── REVIEWS ──────────────────────────────────── */
+.reviews-section { padding: 20px 16px 8px; }
+.reviews-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 14px;
+}
+.reviews-container {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 8px;
+}
+.review-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+  min-width: 260px;
+  max-width: 300px;
+  flex-shrink: 0;
+  scroll-snap-align: start;
+}
+.review-stars { color: #f5a623; font-size: 16px; margin-bottom: 8px; }
+.review-text {
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.5;
+  font-style: italic;
+  margin-bottom: 10px;
+}
+.review-author { font-size: 12px; color: var(--text2); font-weight: 600; }
+
+/* ── THEME SELECTOR ───────────────────────────── */
+.theme-selector {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 8px 0;
+}
+.theme-option {
+  cursor: pointer;
+  text-align: center;
+  font-size: 11px;
+  color: var(--text2);
+}
+.theme-option.active span { color: var(--gold); font-weight: 600; }
+.theme-preview {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  border: 2px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  transition: transform .2s;
+}
+.theme-option.active .theme-preview { transform: scale(1.1); box-shadow: 0 0 0 2px var(--gold); }
 </style>
 </head>
 <body>
@@ -1574,6 +1726,13 @@
 
       <div id="home-review-section" style="display:none;padding:0 0 4px">
         <a id="home-review-btn" href="#" target="_blank" rel="noopener" class="maps-btn review-btn" style="display:flex"><span data-i18n="leaveReview">⭐ Lascia una Recensione su Google</span></a>
+      </div>
+
+      <div class="reviews-section" id="reviews-section" style="display:none">
+        <div class="reviews-title">⭐ Cosa dicono i nostri ospiti</div>
+        <div class="reviews-container" id="reviews-container">
+          <!-- populated by JS -->
+        </div>
       </div>
 
     </div><!-- /tab-home -->
@@ -1853,6 +2012,7 @@
       <span class="nav-label">Partenza</span>
     </button>
   </nav>
+  <button class="wa-fab" id="wa-fab" aria-label="WhatsApp">💬</button>
 </div><!-- /guide -->
 
 <!-- ════════════════════════════════════════════
@@ -1902,8 +2062,28 @@
       <summary class="s-section-title">🎨 Aspetto</summary>
       <div class="s-fields">
         <div class="s-sub-title">Tema Colori</div>
-        <p style="font-size:12px;color:var(--text2);margin-bottom:12px;line-height:1.5">Scegli tra tema scuro (predefinito) e tema chiaro.</p>
-        <button class="s-btn" onclick="toggleTheme()" style="margin-top:4px">🌙 / ☀️ Cambia Tema</button>
+        <div class="theme-selector">
+          <div class="theme-option" data-theme="dark" onclick="selectTheme('dark')">
+            <div class="theme-preview" style="background:#1a3238;border-color:#c9a84c"><span style="color:#c9a84c">Aa</span></div>
+            <span>Scuro</span>
+          </div>
+          <div class="theme-option" data-theme="light" onclick="selectTheme('light')">
+            <div class="theme-preview" style="background:#f8f6f1;border-color:#b8962e"><span style="color:#b8962e">Aa</span></div>
+            <span>Chiaro</span>
+          </div>
+          <div class="theme-option" data-theme="roma" onclick="selectTheme('roma')">
+            <div class="theme-preview" style="background:#2c1810;border-color:#d4a04a"><span style="color:#d4a04a">Aa</span></div>
+            <span>Roma</span>
+          </div>
+          <div class="theme-option" data-theme="romantic" onclick="selectTheme('romantic')">
+            <div class="theme-preview" style="background:#f9f0ed;border-color:#c4887a"><span style="color:#c4887a">Aa</span></div>
+            <span>Romantico</span>
+          </div>
+          <div class="theme-option" data-theme="minimal" onclick="selectTheme('minimal')">
+            <div class="theme-preview" style="background:#ffffff;border-color:#c0392b"><span style="color:#c0392b">Aa</span></div>
+            <span>Minimal</span>
+          </div>
+        </div>
       </div>
     </details>
 
@@ -1998,6 +2178,16 @@
         <div class="s-field"><label>Titolo 🇮🇹</label><input type="text" id="s-st-departureTitleIt" placeholder="Partenza" onblur="autoTranslateField('s-st-departureTitleIt','s-st-departureTitleEn')"></div>
         <div class="s-field"><label>Titolo 🇬🇧</label><input type="text" id="s-st-departureTitleEn" placeholder="Departure"></div>
       </div>
+    </details>
+
+    <!-- Recensioni -->
+    <details class="s-section">
+      <summary class="s-section-title">⭐ Recensioni</summary>
+      <div class="s-fields" id="s-reviews-container" data-count="0">
+        <p style="font-size:12px;color:var(--text2);margin-bottom:12px;line-height:1.5">Aggiungi le migliori recensioni dei tuoi ospiti. Appariranno nella Home della guida.</p>
+        <!-- generated by JS -->
+      </div>
+      <button class="s-add-btn" onclick="addSettingsReview()">➕ Aggiungi Recensione</button>
     </details>
 
     <!-- Contatti extra -->
@@ -2521,7 +2711,12 @@ const DEFAULT_DATA = {
     transportTitleIt: "Muoversi",
     departureEyebrowIt: "È Ora di Partire",
     departureTitleIt: "Partenza"
-  }
+  },
+  reviews: [
+    { author: "Maria R.", stars: 5, textIt: "Appartamento bellissimo, pulito e in posizione perfetta! L'host è stato molto disponibile.", textEn: "Beautiful apartment, clean and perfectly located! The host was very helpful." },
+    { author: "John S.", stars: 5, textIt: "Esperienza fantastica! Torneremo sicuramente.", textEn: "Fantastic experience! We will definitely come back." },
+    { author: "Sophie L.", stars: 5, textIt: "Tutto perfetto, dalla pulizia all'accoglienza. Consigliatissimo!", textEn: "Everything was perfect, from cleanliness to hospitality. Highly recommended!" }
+  ]
 };
 
 /* PUBLISHED_DATA_START */
@@ -2823,7 +3018,12 @@ const PUBLISHED_DATA = {
     "departureEyebrowEn": "",
     "departureTitleIt": "Partenza",
     "departureTitleEn": ""
-  }
+  },
+  "reviews": [
+    { "author": "Maria R.", "stars": 5, "textIt": "Appartamento bellissimo, pulito e in posizione perfetta! L'host è stato molto disponibile.", "textEn": "Beautiful apartment, clean and perfectly located! The host was very helpful." },
+    { "author": "John S.", "stars": 5, "textIt": "Esperienza fantastica! Torneremo sicuramente.", "textEn": "Fantastic experience! We will definitely come back." },
+    { "author": "Sophie L.", "stars": 5, "textIt": "Tutto perfetto, dalla pulizia all'accoglienza. Consigliatissimo!", "textEn": "Everything was perfect, from cleanliness to hospitality. Highly recommended!" }
+  ]
 };
 /* PUBLISHED_DATA_END */
 
@@ -2833,6 +3033,7 @@ const PUBLISHED_DATA = {
 let currentData = null;
 let currentAptIndex = 0;
 let currentRole = null; // 'host' | 'admin'
+let settingsDirty = false;
 
 // PIN state
 let pinBuffer = '';
@@ -3187,6 +3388,12 @@ function renderApp(aptIndex) {
     reviewContainer.style.display = 'none';
     homeReviewSection.style.display = 'none';
   }
+
+  // Reviews
+  renderReviews(d.reviews || []);
+
+  // WhatsApp FAB
+  updateWaFab();
 
   // Update nav labels (language-aware: EN from t(), IT from data)
   const nl = d.navLabels || DEFAULT_DATA.navLabels;
@@ -3550,6 +3757,10 @@ function _openSettingsPanel() {
   const panel = document.getElementById('settings-panel');
   panel.classList.add('open');
   document.body.style.overflow = 'hidden';
+  settingsDirty = false;
+  panel.querySelectorAll('input, textarea, select').forEach(function(el) {
+    el.addEventListener('input', function() { settingsDirty = true; }, { once: false });
+  });
 }
 
 function applyRoleVisibility() {
@@ -3573,6 +3784,10 @@ function applyRoleVisibility() {
 }
 
 function closeSettings() {
+  if (settingsDirty) {
+    if (!confirm('Hai modifiche non salvate. Vuoi davvero uscire?')) return;
+    settingsDirty = false;
+  }
   document.getElementById('settings-panel').classList.remove('open');
   document.body.style.overflow = '';
   currentRole = null;
@@ -4550,6 +4765,12 @@ function populateSettingsForms() {
   // Dynamic contacts
   renderSettingsContacts(d.extraContacts || []);
 
+  // Reviews
+  renderSettingsReviews(d.reviews || []);
+
+  // Char counters
+  initCharCounters();
+
   // Nav Labels
   const nl = d.navLabels || {};
   document.getElementById('s-nl-homeIcon').value = nl.homeIcon || '';
@@ -4625,6 +4846,9 @@ function collectFormData() {
   // Dynamic contacts
   d.extraContacts = collectSettingsContacts();
 
+  // Reviews
+  d.reviews = collectSettingsReviews();
+
   // Nav Labels
   d.navLabels = {
     homeIt:         document.getElementById('s-nl-homeIt').value.trim() || 'Home',
@@ -4681,6 +4905,7 @@ function saveAndApply() {
     currentData = d;
     saveData(d);
     renderLanding();
+    settingsDirty = false;
     closeSettings();
     showToast("✅ Salvato! Ricorda di cliccare '🚀 Pubblica Ora' per aggiornare il sito online.", 'success');
   } else {
@@ -4688,6 +4913,7 @@ function saveAndApply() {
     currentData = d;
     saveData(d);
     renderLanding();
+    settingsDirty = false;
     closeSettings();
     showToast('Salvato con successo!', 'success');
   }
@@ -5071,15 +5297,142 @@ function previewCancel() {
 }
 
 // ════════════════════════════════════════════
+//  REVIEWS
+// ════════════════════════════════════════════
+function renderReviews(reviews) {
+  const section = document.getElementById('reviews-section');
+  const container = document.getElementById('reviews-container');
+  if (!section || !container) return;
+  if (!reviews || reviews.length === 0) { section.style.display = 'none'; return; }
+  container.innerHTML = '';
+  reviews.forEach(function(r) {
+    const text = currentLang === 'en' ? (r.textEn || r.textIt || '') : (r.textIt || r.textEn || '');
+    const stars = '★'.repeat(Math.max(1, Math.min(5, r.stars || 5)));
+    const card = document.createElement('div');
+    card.className = 'review-card';
+    card.innerHTML =
+      '<div class="review-stars">' + escHtml(stars) + '</div>' +
+      '<p class="review-text">"' + escHtml(text) + '"</p>' +
+      '<div class="review-author">— ' + escHtml(r.author || '') + '</div>';
+    container.appendChild(card);
+  });
+  section.style.display = '';
+}
+
+function renderSettingsReviews(reviews) {
+  const container = document.getElementById('s-reviews-container');
+  if (!container) return;
+  const existingReviews = container.querySelectorAll('.s-review-item');
+  existingReviews.forEach(function(el) { el.remove(); });
+  (reviews || []).forEach(function(r, i) {
+    container.appendChild(_buildReviewItem(r, i));
+  });
+  container.dataset.count = (reviews || []).length;
+}
+
+function _buildReviewItem(r, idx) {
+  const wrap = document.createElement('div');
+  wrap.className = 's-review-item';
+  wrap.style.cssText = 'border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:10px';
+  wrap.innerHTML =
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">' +
+      '<strong style="font-size:12px;color:var(--gold)">Recensione #' + (idx+1) + '</strong>' +
+      '<button onclick="removeSettingsReview(' + idx + ')" style="background:transparent;border:none;color:var(--accent);cursor:pointer;font-size:16px">✕</button>' +
+    '</div>' +
+    '<div class="s-field"><label>Nome Ospite</label><input type="text" class="rev-author" placeholder="es. Maria R." value="' + escHtml(r.author || '') + '"></div>' +
+    '<div class="s-field"><label>Stelle</label><select class="rev-stars">' +
+      [5,4,3,2,1].map(function(n) { return '<option value="' + n + '"' + (n === (r.stars||5) ? ' selected' : '') + '>' + n + ' ★</option>'; }).join('') +
+    '</select></div>' +
+    '<div class="s-field"><label>Testo 🇮🇹</label><textarea class="rev-textIt" rows="2" placeholder="Testo recensione in italiano...">' + escHtml(r.textIt || '') + '</textarea></div>' +
+    '<div class="s-field"><label>Testo 🇬🇧</label><textarea class="rev-textEn" rows="2" placeholder="Review text in English...">' + escHtml(r.textEn || '') + '</textarea></div>';
+  return wrap;
+}
+
+function collectSettingsReviews() {
+  const container = document.getElementById('s-reviews-container');
+  if (!container) return [];
+  const items = container.querySelectorAll('.s-review-item');
+  const reviews = [];
+  items.forEach(function(item) {
+    reviews.push({
+      author: item.querySelector('.rev-author').value.trim(),
+      stars: parseInt(item.querySelector('.rev-stars').value, 10) || 5,
+      textIt: item.querySelector('.rev-textIt').value.trim(),
+      textEn: item.querySelector('.rev-textEn').value.trim()
+    });
+  });
+  return reviews;
+}
+
+function addSettingsReview() {
+  const container = document.getElementById('s-reviews-container');
+  if (!container) return;
+  const current = collectSettingsReviews();
+  const newReview = { author: '', stars: 5, textIt: '', textEn: '' };
+  current.push(newReview);
+  container.appendChild(_buildReviewItem(newReview, current.length - 1));
+  container.dataset.count = current.length;
+  settingsDirty = true;
+}
+
+function removeSettingsReview(idx) {
+  const current = collectSettingsReviews();
+  current.splice(idx, 1);
+  renderSettingsReviews(current);
+  settingsDirty = true;
+}
+
+// ════════════════════════════════════════════
+//  WHATSAPP FAB
+// ════════════════════════════════════════════
+function updateWaFab() {
+  const fab = document.getElementById('wa-fab');
+  if (!fab) return;
+  const phone = ((currentData && currentData.hostPhone) || '').replace(/[\s\-\(\)]/g, '').replace(/^\+/, '');
+  if (!phone) { fab.style.display = 'none'; return; }
+  const aptName = (currentData && currentData.apts && currentData.apts[currentAptIndex]) ? currentData.apts[currentAptIndex].name : '';
+  const msg = encodeURIComponent('Ciao! Sono un ospite di ' + aptName + ', avrei bisogno di assistenza.');
+  fab.onclick = function() { window.open('https://wa.me/' + phone + '?text=' + msg, '_blank'); };
+}
+
+// ════════════════════════════════════════════
+//  CHAR COUNTER (textarea)
+// ════════════════════════════════════════════
+function initCharCounters() {
+  document.querySelectorAll('#settings-panel textarea').forEach(function(ta) {
+    if (ta.nextElementSibling && ta.nextElementSibling.classList.contains('char-counter')) return;
+    const counter = document.createElement('div');
+    counter.className = 'char-counter';
+    counter.style.cssText = 'font-size:11px;color:var(--text2);text-align:right;margin-top:2px';
+    ta.parentNode.appendChild(counter);
+    var update = function() {
+      var len = ta.value.length;
+      counter.textContent = len + ' caratteri';
+      counter.style.color = len > 500 ? 'var(--accent)' : 'var(--text2)';
+    };
+    ta.addEventListener('input', update);
+    update();
+  });
+}
+
+// ════════════════════════════════════════════
 //  THEME (Dark/Light)
 // ════════════════════════════════════════════
 function applyTheme(theme) {
-  if (theme === 'light') {
-    document.documentElement.classList.add('light-theme');
-  } else {
-    document.documentElement.classList.remove('light-theme');
-  }
+  document.documentElement.className = document.documentElement.className
+    .replace(/\b(light-theme|theme-roma|theme-romantic|theme-minimal)\b/g, '').trim();
+  if (theme === 'light') document.documentElement.classList.add('light-theme');
+  else if (theme === 'roma') document.documentElement.classList.add('theme-roma');
+  else if (theme === 'romantic') document.documentElement.classList.add('theme-romantic');
+  else if (theme === 'minimal') document.documentElement.classList.add('theme-minimal');
   localStorage.setItem('bnb_theme', theme);
+  document.querySelectorAll('.theme-option').forEach(function(el) {
+    el.classList.toggle('active', el.dataset.theme === theme);
+  });
+}
+
+function selectTheme(theme) {
+  applyTheme(theme);
 }
 
 function toggleTheme() {
@@ -5097,7 +5450,8 @@ function toggleTheme() {
   currentData = loadData();
 
   // Apply saved theme
-  const savedTheme = localStorage.getItem('bnb_theme') || 'dark';
+  const savedTheme = localStorage.getItem('bnb_theme') ||
+    (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
   applyTheme(savedTheme);
 
   // Migrate legacy plain-text PIN to SHA-256 hash
@@ -5126,6 +5480,17 @@ function toggleTheme() {
     else if (e.key === 'Backspace') { e.preventDefault(); pinBackspace(); }
     else if (e.key === 'Escape') closePinModal();
   });
+
+  // PWA Service Worker (inline via Blob)
+  if ('serviceWorker' in navigator) {
+    var swCode = [
+      "self.addEventListener('install',function(e){e.waitUntil(caches.open('bnb-guide-v1').then(function(c){return c.addAll(['./']);}));});",
+      "self.addEventListener('fetch',function(e){e.respondWith(caches.match(e.request).then(function(r){return r||fetch(e.request);}));});"
+    ].join('\n');
+    var swBlob = new Blob([swCode], { type: 'application/javascript' });
+    var swUrl = URL.createObjectURL(swBlob);
+    navigator.serviceWorker.register(swUrl).catch(function() {});
+  }
 
 })();
 </script>
