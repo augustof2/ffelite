@@ -355,6 +355,7 @@ function renderPlaces(places) {
     const mapsLabel = t('guideHere');
     const wazeLabel = t('wazeBtn');
     const hasValidMaps = p.maps && p.maps !== '#';
+    const mapsHref = hasValidMaps ? p.maps : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.name)}`;
     const wazeBtn = hasValidMaps
       ? `<a class="maps-btn waze-btn" href="https://waze.com/ul?q=${encodeURIComponent(p.name)}" target="_blank" rel="noopener noreferrer">🗺️ ${wazeLabel}</a>`
       : '';
@@ -371,7 +372,7 @@ function renderPlaces(places) {
         ${renderRichText(how)}
       </div>
       <div class="maps-btn-group">
-        <a class="maps-btn" href="${escAttr(p.maps || '#')}" target="_blank" rel="noopener noreferrer">${mapsLabel}</a>
+        <a class="maps-btn google-maps-btn" href="${escAttr(mapsHref)}" target="_blank" rel="noopener noreferrer">${mapsLabel}</a>
         ${wazeBtn}
       </div>
     `;
@@ -387,6 +388,7 @@ function renderFood(restaurants, apt) {
     const mapsLabel = t('viewOnMaps');
     const wazeLabel = t('wazeBtn');
     const hasValidMaps = r.maps && r.maps !== '#';
+    const mapsHref = hasValidMaps ? r.maps : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(r.name)}`;
     const wazeBtn = hasValidMaps
       ? `<a class="maps-btn waze-btn" href="https://waze.com/ul?q=${encodeURIComponent(r.name)}" target="_blank" rel="noopener noreferrer">🗺️ ${wazeLabel}</a>`
       : '';
@@ -403,7 +405,7 @@ function renderFood(restaurants, apt) {
       </div>
       <p class="rest-desc">${renderRichText(desc)}</p>
       <div class="maps-btn-group">
-        <a class="maps-btn" href="${escAttr(r.maps || '#')}" target="_blank" rel="noopener noreferrer">${mapsLabel}</a>
+        <a class="maps-btn google-maps-btn" href="${escAttr(mapsHref)}" target="_blank" rel="noopener noreferrer">${mapsLabel}</a>
         ${wazeBtn}
       </div>
     `;
@@ -750,6 +752,13 @@ function openLoginForm() {
   document.getElementById('login-username').value = '';
   document.getElementById('login-password').value = '';
   document.getElementById('login-error').textContent = '';
+  setTimeout(() => {
+    // Force browser to unlock inputs after clearing values (prevents some browsers
+    // from blocking keyboard input after autocomplete interactions)
+    const u = document.getElementById('login-username');
+    const p = document.getElementById('login-password');
+    if (u) { u.focus(); u.blur(); }
+  }, 50);
 }
 
 function closeLoginForm() {
