@@ -2589,25 +2589,43 @@ function renderLanding() {
     document.getElementById('l-bbname-em').innerHTML = '';
   }
   document.getElementById('l-subtitle').textContent = d.subtitle;
+  document.getElementById('l-intro').textContent = currentLang === 'en'
+    ? 'Welcome! Select your apartment to access the complete guide.'
+    : 'Benvenuti! Selezionate il vostro appartamento per accedere alla guida completa.';
 
-  document.getElementById('l-intro').textContent = 'Benvenuti! Selezionate il vostro appartamento per accedere alla guida completa.';
-
-  // Apt cards
+  // Apt cards — each shows IT + EN language selection buttons
   const container = document.getElementById('apt-cards-container');
   container.innerHTML = '';
   d.apts.forEach((apt, i) => {
     const card = document.createElement('div');
     card.className = 'apt-card';
-    card.onclick = () => openGuide(i);
     const aptName = apt.name;
     card.innerHTML = `
-      <div class="apt-card-icon">🏠</div>
-      <div class="apt-card-body">
-        <div class="apt-card-name">${escHtml(aptName)}</div>
-        <div class="apt-card-superhost">★ Superhost</div>
-        <div class="apt-card-addr">${escHtml(apt.addressShort || apt.address)} · ${escHtml(d.cityZone)}</div>
+      <div class="apt-card-top">
+        <div class="apt-card-meta">
+          <div class="apt-card-name">${escHtml(aptName)}</div>
+          <div class="apt-card-addr">${escHtml(apt.addressShort || apt.address)} · ${escHtml(d.cityZone)}</div>
+        </div>
+        <div class="apt-card-superhost">${escHtml(t('superhost'))}</div>
       </div>
-      <div class="apt-card-arrow">›</div>
+      <div class="lang-cards">
+        <div class="lang-card" onclick="openGuide(${i},'it')">
+          <span class="lang-card-flag">🇮🇹</span>
+          <div class="lang-card-body">
+            <div class="lang-card-title">${escHtml(t('langBtnItTitle'))}</div>
+            <div class="lang-card-sub">${escHtml(t('langBtnItSub'))}</div>
+          </div>
+          <span class="lang-card-arrow">›</span>
+        </div>
+        <div class="lang-card" onclick="openGuide(${i},'en')">
+          <span class="lang-card-flag">🇬🇧</span>
+          <div class="lang-card-body">
+            <div class="lang-card-title">${escHtml(t('langBtnEnTitle'))}</div>
+            <div class="lang-card-sub">${escHtml(t('langBtnEnSub'))}</div>
+          </div>
+          <span class="lang-card-arrow">›</span>
+        </div>
+      </div>
     `;
     container.appendChild(card);
   });
@@ -2618,7 +2636,8 @@ function renderLanding() {
 // ════════════════════════════════════════════
 //  OPEN / CLOSE GUIDE
 // ════════════════════════════════════════════
-function openGuide(aptIndex) {
+function openGuide(aptIndex, lang) {
+  if (lang) setLang(lang);
   currentAptIndex = aptIndex;
   document.getElementById('landing').style.display = 'none';
   document.getElementById('gear-btn').classList.add('hidden');
@@ -2627,6 +2646,11 @@ function openGuide(aptIndex) {
   renderApp(aptIndex);
   guide.scrollTop = 0;
   switchTab('home');
+}
+
+function switchLang() {
+  setLang(currentLang === 'it' ? 'en' : 'it');
+  renderApp(currentAptIndex);
 }
 
 function goBack() {
@@ -2642,6 +2666,13 @@ function renderApp(aptIndex) {
   const d = currentData;
   const apt = d.apts[aptIndex] || d.apts[0];
 
+  // Apply static i18n strings to data-i18n elements
+  applyI18n();
+
+  // Update lang toggle button
+  const langBtn = document.getElementById('lang-toggle-btn');
+  if (langBtn) langBtn.textContent = t('langToggle');
+
   // Header
   document.getElementById('guide-apt-name').textContent = apt.name;
 
@@ -2654,11 +2685,11 @@ function renderApp(aptIndex) {
   document.getElementById('s-wifi').textContent = apt.wifi;
   const sMaps = document.getElementById('s-maps');
   sMaps.href = apt.mapsLink || '#';
-  sMaps.textContent = 'Apri Maps';
+  sMaps.textContent = t('openMaps');
 
-  document.getElementById('w-title').textContent = 'Benvenuti! 👋';
+  document.getElementById('w-title').textContent = t('welcome');
   const wItEl = document.getElementById('w-text-it');
-  wItEl.innerHTML = renderRichText(d.welcomeIt || '');
+  wItEl.innerHTML = renderRichText(langField(d, 'welcome') || '');
   document.getElementById('w-sign').textContent = '★ ' + d.hostName;
 
   // Stay tab
@@ -2671,10 +2702,10 @@ function renderApp(aptIndex) {
   const stMaps = document.getElementById('st-maps');
   stMaps.href = apt.mapsLink || '#';
 
-  // Stay tab - soggiorno extended fields
-  document.getElementById('st-how-reach').innerHTML = renderRichText(apt.howToReachIt || '');
-  document.getElementById('st-how-access').innerHTML = renderRichText(apt.howToAccessIt || '');
-  document.getElementById('st-parking').innerHTML = renderRichText(apt.parkingIt || '');
+  // Stay tab - extended fields (language-aware)
+  document.getElementById('st-how-reach').innerHTML = renderRichText(langField(apt, 'howToReach') || '');
+  document.getElementById('st-how-access').innerHTML = renderRichText(langField(apt, 'howToAccess') || '');
+  document.getElementById('st-parking').innerHTML = renderRichText(langField(apt, 'parking') || '');
 
   // House Rules
   const rulesList = document.getElementById('st-rules-list');
@@ -2682,8 +2713,8 @@ function renderApp(aptIndex) {
   (apt.houseRules || []).forEach(r => {
     const li = document.createElement('li');
     li.className = 'rule-item';
-    const title = r.titleIt;
-    const desc = r.descIt;
+    const title = langField(r, 'title');
+    const desc = langField(r, 'desc');
     li.innerHTML = `<span class="rule-icon">${escHtml(r.icon || '')}</span><div><div class="rule-title">${escHtml(title || '')}</div><div class="rule-desc">${renderRichText(desc || '')}</div></div>`;
     rulesList.appendChild(li);
   });
@@ -2691,27 +2722,27 @@ function renderApp(aptIndex) {
   // Bedroom tags
   const bedroomTagsEl = document.getElementById('st-bedroom-tags');
   if (bedroomTagsEl) {
-    const bedroomRaw = apt.bedroomTagsIt || '';
+    const bedroomRaw = langField(apt, 'bedroomTags') || '';
     bedroomTagsEl.innerHTML = bedroomRaw
-      ? bedroomRaw.split(',').map(t => t.trim()).filter(Boolean).map(t => `<span class="tag">${escHtml(t)}</span>`).join('')
+      ? bedroomRaw.split(',').map(tt => tt.trim()).filter(Boolean).map(tt => `<span class="tag">${escHtml(tt)}</span>`).join('')
       : '';
   }
 
   // Kitchen tags
   const kitchenTagsEl = document.getElementById('st-kitchen-tags');
   if (kitchenTagsEl) {
-    const kitchenRaw = apt.kitchenTagsIt || '';
+    const kitchenRaw = langField(apt, 'kitchenTags') || '';
     kitchenTagsEl.innerHTML = kitchenRaw
-      ? kitchenRaw.split(',').map(t => t.trim()).filter(Boolean).map(t => `<span class="tag">${escHtml(t)}</span>`).join('')
+      ? kitchenRaw.split(',').map(tt => tt.trim()).filter(Boolean).map(tt => `<span class="tag">${escHtml(tt)}</span>`).join('')
       : '';
   }
 
   // Bathroom tags
   const bathroomTagsEl = document.getElementById('st-bathroom-tags');
   if (bathroomTagsEl) {
-    const bathroomRaw = apt.bathroomTagsIt || '';
+    const bathroomRaw = langField(apt, 'bathroomTags') || '';
     bathroomTagsEl.innerHTML = bathroomRaw
-      ? bathroomRaw.split(',').map(t => t.trim()).filter(Boolean).map(t => `<span class="tag">${escHtml(t)}</span>`).join('')
+      ? bathroomRaw.split(',').map(tt => tt.trim()).filter(Boolean).map(tt => `<span class="tag">${escHtml(tt)}</span>`).join('')
       : '';
   }
 
@@ -2719,22 +2750,21 @@ function renderApp(aptIndex) {
   const servicesEl = document.getElementById('st-extra-services');
   if (servicesEl) {
     servicesEl.innerHTML = '';
-    const waHint = '💬 Richiedi su WhatsApp';
     (apt.extraServices || []).forEach(svc => {
-      const name = svc.nameIt || '';
-      const desc = svc.descIt || '';
+      const name = langField(svc, 'name') || '';
+      const desc = langField(svc, 'desc') || '';
       const a = document.createElement('a');
       a.className = 'service-item';
       a.href = '#';
       a.addEventListener('click', function(e) {
         e.preventDefault();
-        requestService(svc.nameIt || '');
+        requestService(svc);
       });
       a.innerHTML = `
         <div class="service-icon">${escHtml(svc.icon || '✨')}</div>
         <div class="service-name">${escHtml(name)}</div>
         <div class="service-desc">${escHtml(desc)}</div>
-        <div class="service-wa-hint">${waHint}</div>`;
+        <div class="service-wa-hint">${escHtml(t('waHint'))}</div>`;
       servicesEl.appendChild(a);
     });
   }
@@ -2743,7 +2773,7 @@ function renderApp(aptIndex) {
   renderPlaces(apt.places || []);
 
   // Food
-  renderFood(apt.restaurants || [], apt.supermarketIt, apt.supermarketMaps);
+  renderFood(apt.restaurants || [], apt);
 
   // Transport
   renderTransport(apt.transport || {});
@@ -2771,21 +2801,21 @@ function renderApp(aptIndex) {
     homeReviewSection.style.display = 'none';
   }
 
-  // Update nav labels from data
+  // Update nav labels (language-aware: EN from t(), IT from data)
   const nl = d.navLabels || DEFAULT_DATA.navLabels;
   const navLabelMap = {
-    home: nl.homeIt,
-    stay: nl.stayIt,
-    places: nl.placesIt,
-    food: nl.foodIt,
-    transport: nl.transportIt,
-    departure: nl.departureIt
+    home:      currentLang === 'en' ? t('navHome')      : (nl.homeIt      || t('navHome')),
+    stay:      currentLang === 'en' ? t('navStay')      : (nl.stayIt      || t('navStay')),
+    places:    currentLang === 'en' ? t('navPlaces')    : (nl.placesIt    || t('navPlaces')),
+    food:      currentLang === 'en' ? t('navFood')      : (nl.foodIt      || t('navFood')),
+    transport: currentLang === 'en' ? t('navTransport') : (nl.transportIt || t('navTransport')),
+    departure: currentLang === 'en' ? t('navDeparture') : (nl.departureIt || t('navDeparture'))
   };
   const navIconMap = {
-    home: nl.homeIcon || DEFAULT_DATA.navLabels.homeIcon,
-    stay: nl.stayIcon || DEFAULT_DATA.navLabels.stayIcon,
-    places: nl.placesIcon || DEFAULT_DATA.navLabels.placesIcon,
-    food: nl.foodIcon || DEFAULT_DATA.navLabels.foodIcon,
+    home:      nl.homeIcon      || DEFAULT_DATA.navLabels.homeIcon,
+    stay:      nl.stayIcon      || DEFAULT_DATA.navLabels.stayIcon,
+    places:    nl.placesIcon    || DEFAULT_DATA.navLabels.placesIcon,
+    food:      nl.foodIcon      || DEFAULT_DATA.navLabels.foodIcon,
     transport: nl.transportIcon || DEFAULT_DATA.navLabels.transportIcon,
     departure: nl.departureIcon || DEFAULT_DATA.navLabels.departureIcon
   };
@@ -2808,14 +2838,14 @@ function renderApp(aptIndex) {
     }
   });
 
-  // Update section headers from data
+  // Update section headers (language-aware)
   const st = d.sectionTitles || DEFAULT_DATA.sectionTitles;
   const sectionHeaderMap = [
-    { tab: 'stay',      eyebrow: st.stayEyebrowIt,      title: st.stayTitleIt },
-    { tab: 'places',    eyebrow: st.placesEyebrowIt,    title: st.placesTitleIt },
-    { tab: 'food',      eyebrow: st.foodEyebrowIt,      title: st.foodTitleIt },
-    { tab: 'transport', eyebrow: st.transportEyebrowIt, title: st.transportTitleIt },
-    { tab: 'departure', eyebrow: st.departureEyebrowIt, title: st.departureTitleIt }
+    { tab: 'stay',      eyebrow: currentLang === 'en' ? t('stayEyebrow')      : (st.stayEyebrowIt      || t('stayEyebrow')),      title: currentLang === 'en' ? t('stayTitle')      : (st.stayTitleIt      || t('stayTitle')) },
+    { tab: 'places',    eyebrow: currentLang === 'en' ? t('placesEyebrow')    : (st.placesEyebrowIt    || t('placesEyebrow')),    title: currentLang === 'en' ? t('placesTitle')    : (st.placesTitleIt    || t('placesTitle')) },
+    { tab: 'food',      eyebrow: currentLang === 'en' ? t('foodEyebrow')      : (st.foodEyebrowIt      || t('foodEyebrow')),      title: currentLang === 'en' ? t('foodTitle')      : (st.foodTitleIt      || t('foodTitle')) },
+    { tab: 'transport', eyebrow: currentLang === 'en' ? t('transportEyebrow') : (st.transportEyebrowIt || t('transportEyebrow')), title: currentLang === 'en' ? t('transportTitle') : (st.transportTitleIt || t('transportTitle')) },
+    { tab: 'departure', eyebrow: currentLang === 'en' ? t('departureEyebrow') : (st.departureEyebrowIt || t('departureEyebrow')), title: currentLang === 'en' ? t('departureTitle') : (st.departureTitleIt || t('departureTitle')) }
   ];
   sectionHeaderMap.forEach(({ tab, eyebrow, title }) => {
     const tabEl = document.getElementById('tab-' + tab);
@@ -2831,10 +2861,10 @@ function renderPlaces(places) {
   const container = document.getElementById('places-container');
   container.innerHTML = '';
   places.forEach(p => {
-    const desc = p.descIt;
-    const how = p.howIt;
-    const howLabel = 'Come arrivarci';
-    const mapsLabel = '🧭 Guidami qui';
+    const desc = langField(p, 'desc');
+    const how  = langField(p, 'how');
+    const howLabel  = t('howToArrive');
+    const mapsLabel = t('guideHere');
     const card = document.createElement('div');
     card.className = 'place-card';
     card.innerHTML = `
@@ -2853,12 +2883,12 @@ function renderPlaces(places) {
   });
 }
 
-function renderFood(restaurants, supermarketIt, supermarketMaps) {
+function renderFood(restaurants, apt) {
   const container = document.getElementById('food-container');
   container.innerHTML = '';
   restaurants.forEach(r => {
-    const desc = r.descIt;
-    const mapsLabel = '🧭 Vedi su Maps';
+    const desc = langField(r, 'desc');
+    const mapsLabel = t('viewOnMaps');
     const card = document.createElement('div');
     card.className = 'restaurant-card';
     card.innerHTML = `
@@ -2877,10 +2907,10 @@ function renderFood(restaurants, supermarketIt, supermarketMaps) {
   });
 
   // Supermercato
-  const superLabel = 'Supermercato';
-  const superDesc = supermarketIt || 'Supermercato più vicino a ~300 metri. Orari: Lun–Sab 8:00–20:00, Dom 9:00–13:00.';
-  const superMaps = supermarketMaps || '';
-  const superMapsLabel = '🧭 Vedi su Maps';
+  const superLabel = t('supermarket');
+  const superDesc  = langField(apt, 'supermarket') || (currentLang === 'en' ? 'Nearest supermarket ~300 metres. Hours: Mon–Sat 8:00–20:00, Sun 9:00–13:00.' : 'Supermercato più vicino a ~300 metri. Orari: Lun–Sab 8:00–20:00, Dom 9:00–13:00.');
+  const superMaps  = (apt && apt.supermarketMaps) || '';
+  const superMapsLabel = t('viewOnMaps');
   const superMapsBtn = superMaps ? `<a class="maps-btn" href="${escAttr(superMaps)}" target="_blank" rel="noopener">${superMapsLabel}</a>` : '';
   const superCard = document.createElement('div');
   superCard.className = 'supermercato-card';
@@ -2901,25 +2931,23 @@ function renderTransport(transport) {
   const container = document.getElementById('transport-container');
   container.innerHTML = '';
   const items = [
-    { key: 'airport', icon: transport.airportIcon || '✈️', label: "Dall'Aeroporto", text: transport.airportIt, maps: transport.airportMaps, enabled: transport.airportEnabled !== false },
-    { key: 'station', icon: transport.stationIcon || '🚉', label: 'Dalla Stazione', text: transport.stationIt, maps: transport.stationMaps, enabled: transport.stationEnabled !== false },
-    { key: 'metro', icon: transport.metroIcon || '🚇', label: 'Metro', text: transport.metroIt, maps: transport.metroMaps, enabled: transport.metroEnabled !== false },
-    { key: 'bus', icon: transport.busIcon || '🚌', label: 'Bus', text: transport.busIt, maps: transport.busMaps, enabled: transport.busEnabled !== false }
+    { key: 'airport', icon: transport.airportIcon || '✈️', label: t('fromAirport'), text: langField(transport, 'airport'), maps: transport.airportMaps, enabled: transport.airportEnabled !== false },
+    { key: 'station', icon: transport.stationIcon || '🚉', label: t('fromStation'), text: langField(transport, 'station'), maps: transport.stationMaps, enabled: transport.stationEnabled !== false },
+    { key: 'metro',   icon: transport.metroIcon   || '🚇', label: t('metro'),       text: langField(transport, 'metro'),   maps: transport.metroMaps,   enabled: transport.metroEnabled   !== false },
+    { key: 'bus',     icon: transport.busIcon     || '🚌', label: t('bus'),         text: langField(transport, 'bus'),     maps: transport.busMaps,     enabled: transport.busEnabled     !== false }
   ];
-  const mapsLabel = '🧭 Vedi su Maps';
+  const mapsLabel = t('viewOnMaps');
   items.forEach(item => {
     if (!item.enabled) return;
-    const title = item.label;
-    const text = item.text;
     const card = document.createElement('div');
     card.className = 'transport-card';
     const mapsBtn = item.maps ? `<a class="maps-btn" href="${escAttr(item.maps)}" target="_blank" rel="noopener">${mapsLabel}</a>` : '';
     card.innerHTML = `
       <div class="transport-header">
         <span class="transport-icon">${item.icon}</span>
-        <span class="transport-title">${escHtml(title)}</span>
+        <span class="transport-title">${escHtml(item.label)}</span>
       </div>
-      <p class="transport-desc">${renderRichText(text)}</p>
+      <p class="transport-desc">${renderRichText(item.text)}</p>
       ${mapsBtn}
     `;
     container.appendChild(card);
@@ -2927,11 +2955,11 @@ function renderTransport(transport) {
 
   // Biglietti
   const ticketsEl = document.getElementById('tr-tickets-desc');
-  if (ticketsEl) ticketsEl.innerHTML = renderRichText(transport.ticketsIt || '');
+  if (ticketsEl) ticketsEl.innerHTML = renderRichText(langField(transport, 'tickets') || '');
 
   // Taxi & App
   const taxiEl = document.getElementById('tr-taxi-desc');
-  if (taxiEl) taxiEl.innerHTML = renderRichText(transport.taxiIt || '');
+  if (taxiEl) taxiEl.innerHTML = renderRichText(langField(transport, 'taxi') || '');
 }
 
 // ════════════════════════════════════════════
@@ -2940,7 +2968,6 @@ function renderTransport(transport) {
 function renderExtraContacts(contacts) {
   const container = document.getElementById('sos-extra-contacts');
   container.innerHTML = '';
-  const callLabel = 'Chiama';
   (contacts || []).forEach(c => {
     if (!c.name && !c.phone) return;
     const card = document.createElement('div');
@@ -2951,7 +2978,7 @@ function renderExtraContacts(contacts) {
         <div class="sos-name">${escHtml(c.name || '')}</div>
         <div class="sos-number">📞 ${escHtml(c.phone || '')}</div>
       </div>
-      <a class="call-btn host" href="tel:${escAttr((c.phone || '').replace(/\s/g, ''))}">📞 ${callLabel}</a>
+      <a class="call-btn host" href="tel:${escAttr((c.phone || '').replace(/\s/g, ''))}">📞 ${escHtml(t('call'))}</a>
     `;
     container.appendChild(card);
   });
@@ -2962,18 +2989,18 @@ function renderExtraContacts(contacts) {
 // ════════════════════════════════════════════
 function renderDeparture(d, checkoutSteps) {
   const titleEl = document.getElementById('closing-title');
-  const textEl = document.getElementById('closing-text');
-  if (titleEl) titleEl.textContent = d.closingTitleIt || '';
-  if (textEl) textEl.innerHTML = renderRichText(d.closingTextIt || '');
+  const textEl  = document.getElementById('closing-text');
+  if (titleEl) titleEl.textContent = langField(d, 'closingTitle') || '';
+  if (textEl)  textEl.innerHTML    = renderRichText(langField(d, 'closingText') || '');
 
   // Checkout steps
   const stepsContainer = document.getElementById('departure-steps-list');
   if (stepsContainer) {
     stepsContainer.innerHTML = '';
     (checkoutSteps || []).forEach((step, i) => {
-      const title = step.titleIt || '';
-      const desc = step.descIt || '';
-      const item = document.createElement('div');
+      const title = langField(step, 'title') || '';
+      const desc  = langField(step, 'desc')  || '';
+      const item  = document.createElement('div');
       item.className = 'step-item';
       item.innerHTML = `
         <div class="step-num">${i + 1}</div>
@@ -2989,10 +3016,11 @@ function renderDeparture(d, checkoutSteps) {
 // ════════════════════════════════════════════
 //  WHATSAPP SERVICE REQUEST
 // ════════════════════════════════════════════
-function requestService(nameIt) {
-  const phone = ((currentData && currentData.hostPhone) || '').replace(/[\s\-\(\)]/g, '').replace(/^\+/, '');
-  const msg = `Ciao! Vorrei richiedere il servizio: ${nameIt}`;
-  const url = phone
+function requestService(svc) {
+  const phone   = ((currentData && currentData.hostPhone) || '').replace(/[\s\-\(\)]/g, '').replace(/^\+/, '');
+  const svcName = langField(svc, 'name') || svc.nameIt || '';
+  const msg     = t('waRequest') + svcName;
+  const url     = phone
     ? `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`
     : `https://wa.me/?text=${encodeURIComponent(msg)}`;
   window.open(url, '_blank', 'noopener,noreferrer');
