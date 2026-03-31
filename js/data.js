@@ -494,21 +494,21 @@ const PUBLISHED_DATA = {
           "icon": "🧹",
           "nameIt": "Pulizie Aggiuntive",
           "nameEn": "Additional Cleaning",
-          "descIt": "Ogni 4 giorni su richiesta",
-          "descEn": "Every 4 days on request"
+          "descIt": "Disponibile su richiesta (50€)",
+          "descEn": "Available on request (50€)"
         },
         {
           "icon": "🚗",
           "nameIt": "Transfer Aeroporto",
-          "nameEn": "Airport Transfer",
-          "descIt": "Ogni 4 giorni su richiesta",
+          "nameEn": "Airport transfers",
+          "descIt": "Prenotabile in anticipo (50€)",
           "descEn": "Bookable in advance (€50)"
         },
         {
           "icon": "🛁",
           "nameIt": "Jacuzzi Pacchetto",
           "nameEn": "Jacuzzi Package",
-          "descIt": "Ogni 4 giorni su richiesta",
+          "descIt": "Disponibile su richiesta: prosecco, fiori, palloncini, cibo (da 30 a 60€)",
           "descEn": "Available on request: prosecco, flowers, balloons, food (from 30 to 60€)"
         }
       ],
@@ -715,22 +715,22 @@ const PUBLISHED_DATA = {
   },
   "reviews": [
     {
-      "author": "Maria R.",
+      "author": "Maria Rosa",
       "stars": 5,
-      "textIt": "Appartamento bellissimo, pulito e in posizione perfetta! L'host è stato molto disponibile.",
-      "textEn": "Beautiful apartment, clean and perfectly located! The host was very helpful."
+      "textIt": "Appartamento bellissimo, pulito e in posizione perfetta! L'host è stato molto disponibile",
+      "textEn": "Beautiful apartment, clean and perfectly located! The host was very helpful"
     },
     {
-      "author": "John S.",
+      "author": "John Sa",
       "stars": 5,
-      "textIt": "Esperienza fantastica! Torneremo sicuramente.",
-      "textEn": "Fantastic experience! We will definitely come back."
+      "textIt": "Esperienza fantastica! Torneremo sicuramente",
+      "textEn": "Fantastic experience! We will definitely come back"
     },
     {
-      "author": "Sophie L.",
+      "author": "Sophie L",
       "stars": 5,
-      "textIt": "Tutto perfetto, dalla pulizia all'accoglienza. Consigliatissimo!",
-      "textEn": "Everything was perfect, from cleanliness to hospitality. Highly recommended!"
+      "textIt": "Tutto perfetto, dalla pulizia all'accoglienza. Consigliatissimo",
+      "textEn": "Everything was perfect, from cleanliness to hospitality. Highly recommended"
     }
   ]
 };
