@@ -179,6 +179,11 @@ function populateSettingsForms() {
   document.getElementById('s-closingTitleEn').value = d.closingTitleEn || '';
   document.getElementById('s-closingTextIt').value = d.closingTextIt || '';
   document.getElementById('s-closingTextEn').value = d.closingTextEn || '';
+  // PWA manifest customisation
+  const pwaNameEl = document.getElementById('s-pwaName');
+  if (pwaNameEl) pwaNameEl.value = d.pwaName || '';
+  const pwaShortNameEl = document.getElementById('s-pwaShortName');
+  if (pwaShortNameEl) pwaShortNameEl.value = d.pwaShortName || '';
 
   // Apts (dynamic)
   renderSettingsApts(d.apts);
@@ -269,7 +274,7 @@ function populateSettingsForms() {
   if (typeof GuestAnalytics !== 'undefined') GuestAnalytics.renderDashboard('an-dashboard');
 }
 
-function collectFormData() {
+async function collectFormData() {
   const d = deepClone(currentData);
 
   d.bbName = document.getElementById('s-bbName').value.trim() || d.bbName;
@@ -286,9 +291,12 @@ function collectFormData() {
   d.closingTitleEn = document.getElementById('s-closingTitleEn').value.trim();
   d.closingTextIt = document.getElementById('s-closingTextIt').value.trim();
   d.closingTextEn = document.getElementById('s-closingTextEn').value.trim();
+  // PWA manifest customisation
+  d.pwaName = (document.getElementById('s-pwaName') || {}).value || '';
+  d.pwaShortName = (document.getElementById('s-pwaShortName') || {}).value || '';
 
-  // Dynamic apts
-  d.apts = collectSettingsApts();
+  // Dynamic apts (async: encrypts WiFi passwords with AES-GCM)
+  d.apts = await collectSettingsApts();
 
   // Dynamic contacts
   d.extraContacts = collectSettingsContacts();
@@ -398,27 +406,29 @@ function saveAndApply() {
   }
   if (currentRole === 'host') {
     if (!confirm('Vuoi salvare le modifiche? Le vedranno tutti gli ospiti.')) return;
-    const d = collectFormData();
-    currentData = d;
-    saveData(d);
-    renderLanding();
-    updateDynamicManifest();
-    settingsDirty = false;
-    // Stay in settings panel - show toast feedback
-    showToast("✅ Salvato! Ricorda di cliccare '🚀 Pubblica Ora' per aggiornare il sito online.", 'success');
-    addChangelogEntry('Impostazioni salvate', 'host');
-    if (typeof renderChangelogSection === 'function') renderChangelogSection();
+    collectFormData().then(d => {
+      currentData = d;
+      saveData(d);
+      renderLanding();
+      updateDynamicManifest();
+      settingsDirty = false;
+      // Stay in settings panel - show toast feedback
+      showToast("✅ Salvato! Ricorda di cliccare '🚀 Pubblica Ora' per aggiornare il sito online.", 'success');
+      addChangelogEntry('Impostazioni salvate', 'host');
+      if (typeof renderChangelogSection === 'function') renderChangelogSection();
+    });
   } else {
-    const d = collectFormData();
-    currentData = d;
-    saveData(d);
-    renderLanding();
-    updateDynamicManifest();
-    settingsDirty = false;
-    // Stay in settings panel - show toast feedback
-    showToast('✅ Salvato con successo!', 'success');
-    addChangelogEntry('Impostazioni salvate', 'admin');
-    if (typeof renderChangelogSection === 'function') renderChangelogSection();
+    collectFormData().then(d => {
+      currentData = d;
+      saveData(d);
+      renderLanding();
+      updateDynamicManifest();
+      settingsDirty = false;
+      // Stay in settings panel - show toast feedback
+      showToast('✅ Salvato con successo!', 'success');
+      addChangelogEntry('Impostazioni salvate', 'admin');
+      if (typeof renderChangelogSection === 'function') renderChangelogSection();
+    });
   }
 }
 
@@ -436,8 +446,8 @@ function resetData() {
   showToast('Dati resettati', 'info');
 }
 
-function exportJSON() {
-  const d = collectFormData();
+async function exportJSON() {
+  const d = await collectFormData();
   const json = JSON.stringify(d, null, 2);
   const blob = new Blob([json], { type: 'application/json' });
   const url = URL.createObjectURL(blob);

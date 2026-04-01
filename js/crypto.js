@@ -118,13 +118,47 @@ async function decryptToken(ciphertext) {
   }
 }
 
-// ── WiFi password XOR obfuscation ────────────
-// ⚠️  WARNING: This is NOT cryptographic encryption.
-//    XOR with a fixed key provides only minimal obfuscation — it prevents
-//    casual reading of the value in source/localStorage but offers no real
-//    security. Anyone who reads this source file can reverse it instantly.
-//    For sensitive data use encryptToken() / decryptToken() which use AES-GCM
-//    (the same algorithm used for GitHub tokens).
+// ── WiFi password AES-GCM encryption ─────────
+// WiFi passwords are encrypted with AES-GCM (same key as tokens) and stored
+// with the prefix _AESGCM_. Existing _OBF_ (XOR) values are automatically
+// migrated to AES-GCM on first boot via migrateWifiPasswords() in app.js.
+
+const _WIFI_AES_PREFIX = '_AESGCM_';
+
+async function encryptWifi(plaintext) {
+  if (!plaintext) return '';
+  const key = await _getOrCreateKey();
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const enc = new TextEncoder();
+  const cipherBuf = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, enc.encode(plaintext));
+  const combined = new Uint8Array(iv.byteLength + cipherBuf.byteLength);
+  combined.set(iv, 0);
+  combined.set(new Uint8Array(cipherBuf), iv.byteLength);
+  return _WIFI_AES_PREFIX + btoa(String.fromCharCode(...combined));
+}
+
+async function decryptWifi(ciphertext) {
+  if (!ciphertext) return '';
+  // Handle legacy XOR-obfuscated values transparently
+  if (ciphertext.startsWith(_OBF_PREFIX)) return deobfuscate(ciphertext);
+  if (!ciphertext.startsWith(_WIFI_AES_PREFIX)) return ciphertext; // plain-text fallback
+  try {
+    const key = await _getOrCreateKey();
+    const combined = Uint8Array.from(atob(ciphertext.slice(_WIFI_AES_PREFIX.length)), c => c.charCodeAt(0));
+    const iv = combined.slice(0, 12);
+    const data = combined.slice(12);
+    const plainBuf = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, data);
+    return new TextDecoder().decode(plainBuf);
+  } catch (err) {
+    console.warn('[wifi] AES-GCM decryption failed:', err);
+    return '';
+  }
+}
+
+// ── WiFi password XOR obfuscation (DEPRECATED) ───
+// ⚠️  DEPRECATED: XOR obfuscation is kept only for backward-compatible migration
+//    of existing data. New values are encrypted with AES-GCM via encryptWifi().
+//    Do NOT use obfuscate()/deobfuscate() for new WiFi password storage.
 // Values prefixed with _OBF_ are obfuscated; plain-text values are returned
 // as-is to maintain backward compatibility with existing localStorage data.
 

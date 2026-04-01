@@ -8,6 +8,14 @@ if ('serviceWorker' in navigator) {
     }
   });
 
+  // Listen for background-update notifications from stale-while-revalidate
+  navigator.serviceWorker.addEventListener('message', event => {
+    if (event.data && event.data.type === 'CONTENT_UPDATED') {
+      // null = background update (no SW worker reference needed; reload directly)
+      showUpdateBanner(null);
+    }
+  });
+
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js').then(reg => {
       reg.addEventListener('updatefound', () => {
@@ -22,17 +30,35 @@ if ('serviceWorker' in navigator) {
   });
 }
 
+function _swBannerLang() {
+  try {
+    return (typeof currentLang !== 'undefined' && currentLang) ||
+      localStorage.getItem('bnb_lang') ||
+      document.documentElement.lang ||
+      'it';
+  } catch (_) { return 'it'; }
+}
+
 function showUpdateBanner(worker) {
   if (document.getElementById('sw-update-banner')) return;
+  const lang = _swBannerLang();
+  const isEn = lang === 'en';
+  const msg    = isEn ? '🔄 New version available!'   : '🔄 Nuova versione disponibile!';
+  const btnUpd = isEn ? 'Update'                       : 'Aggiorna';
   const banner = document.createElement('div');
   banner.id = 'sw-update-banner';
-  banner.innerHTML = '🔄 Nuova versione disponibile! <button class="sw-banner-btn-update" id="sw-update-btn">Aggiorna</button><button class="sw-banner-btn-close" id="sw-close-btn">✕</button>';
+  banner.innerHTML = `${msg} <button class="sw-banner-btn-update" id="sw-update-btn">${btnUpd}</button><button class="sw-banner-btn-close" id="sw-close-btn">✕</button>`;
   document.body.appendChild(banner);
 
   document.getElementById('sw-close-btn').addEventListener('click', function() { banner.remove(); });
   document.getElementById('sw-update-btn').addEventListener('click', () => {
-    // Dice al nuovo SW di attivarsi → trigga controllerchange → reload
-    worker.postMessage({ type: 'SKIP_WAITING' });
+    if (worker) {
+      // Dice al nuovo SW di attivarsi → trigga controllerchange → reload
+      worker.postMessage({ type: 'SKIP_WAITING' });
+    } else {
+      // Background update — just reload to get fresh assets
+      location.reload();
+    }
   });
 }
 

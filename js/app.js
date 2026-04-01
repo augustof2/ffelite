@@ -6,9 +6,9 @@ function checkUnconfigured() {
   if (!banner) return;
   const d = currentData;
   const firstApt = d.apts && d.apts[0];
+  // WiFi name check is sufficient — after AES-GCM migration wifiPass can't be sync-compared
   const isDefault = d.bbName === 'Il Tuo B&B' ||
-    (firstApt && firstApt.wifi === 'NomeRete') ||
-    (firstApt && deobfuscate(firstApt.wifiPass) === 'password123');
+    (firstApt && firstApt.wifi === 'NomeRete');
   banner.style.display = isDefault ? 'block' : 'none';
 }
 
@@ -176,12 +176,16 @@ function renderApp(aptIndex) {
   document.getElementById('st-guests').textContent = langField(apt, 'maxGuests');
   // Guard: hide default placeholder WiFi name and password
   const isDefaultWifi = apt.wifi === 'NomeRete' || apt.wifi === 'NomeRete2';
-  const plainPass = deobfuscate(apt.wifiPass || '');
-  const isDefaultPass = plainPass === 'password123' || plainPass === 'password456';
   document.getElementById('st-wifi-name').textContent = isDefaultWifi ? '' : apt.wifi;
-  document.getElementById('st-wifi-pass').textContent = isDefaultPass ? '' : plainPass;
+  // Decrypt WiFi password asynchronously (AES-GCM or legacy XOR)
   const copyBtn = document.getElementById('copy-wifi-btn');
-  if (copyBtn) copyBtn.style.display = isDefaultPass ? 'none' : '';
+  if (copyBtn) copyBtn.style.display = 'none';
+  document.getElementById('st-wifi-pass').textContent = '';
+  decryptWifi(apt.wifiPass || '').then(plainPass => {
+    const isDefaultPass = plainPass === 'password123' || plainPass === 'password456';
+    document.getElementById('st-wifi-pass').textContent = isDefaultPass ? '' : plainPass;
+    if (copyBtn) copyBtn.style.display = isDefaultPass ? 'none' : '';
+  });
 
   const stMaps = document.getElementById('st-maps');
   stMaps.href = apt.mapsLink || '#';
@@ -856,12 +860,9 @@ function checkPin() {
     }, 1000);
     return;
   }
-  verifyPin(pinBuffer, getStoredPinHash()).then(async ok => {
+  // Pass PIN_KEY so verifyPin() can auto-upgrade legacy SHA-256 hash to PBKDF2
+  verifyPin(pinBuffer, getStoredPinHash(), PIN_KEY).then(ok => {
     if (ok) {
-      // Upgrade legacy SHA-256 hash to PBKDF2 on first successful login
-      if (/^[a-f0-9]{64}$/.test(getStoredPinHash())) {
-        localStorage.setItem(PIN_KEY, await hashPin(pinBuffer));
-      }
       resetRateLimit('pin');
       currentRole = 'host';
       closePinModal();
@@ -1089,6 +1090,25 @@ async function migratePinIfNeeded() {
 }
 
 // ════════════════════════════════════════════
+//  WIFI PASSWORD MIGRATION (XOR → AES-GCM)
+// ════════════════════════════════════════════
+async function migrateWifiPasswords() {
+  if (!currentData || !currentData.apts) return;
+  let migrated = false;
+  for (const apt of currentData.apts) {
+    if (apt.wifiPass && apt.wifiPass.startsWith('_OBF_')) {
+      const plain = deobfuscate(apt.wifiPass);
+      apt.wifiPass = await encryptWifi(plain);
+      migrated = true;
+    }
+  }
+  if (migrated) {
+    saveData(currentData);
+    console.log('[wifi] XOR passwords migrated to AES-GCM');
+  }
+}
+
+// ════════════════════════════════════════════
 //  PUBLISH ONLINE (GitHub API)
 
 function showToast(message, type = 'success', duration = 2500) {
@@ -1113,8 +1133,8 @@ function showToast(message, type = 'success', duration = 2500) {
 // ════════════════════════════════════════════
 let _previewPreviousData = null;
 
-function previewMode() {
-  const d = collectFormData();
+async function previewMode() {
+  const d = await collectFormData();
   _previewPreviousData = deepClone(currentData);
   currentData = d;
   closeSettings();
@@ -1346,9 +1366,12 @@ function initScrollTopBtn() {
 function updateDynamicManifest() {
   const d = currentData;
   if (!d || !d.bbName || d.bbName === 'Il Tuo B&B') return; // keep static manifest for unconfigured
+  // Use dedicated pwaName/pwaShortName fields when set, fall back to bbName
+  const manifestName      = (d.pwaName      && d.pwaName.trim())      ? d.pwaName.trim()      : (d.bbName || 'Guest Guide') + ' — Guida';
+  const manifestShortName = (d.pwaShortName && d.pwaShortName.trim()) ? d.pwaShortName.trim() : d.bbName || 'Guida';
   const manifest = {
-    name: (d.bbName || 'Guest Guide') + ' — Guida',
-    short_name: d.bbName || 'Guida',
+    name: manifestName,
+    short_name: manifestShortName,
     start_url: './',
     scope: './',
     lang: 'it',
@@ -1395,6 +1418,7 @@ function init() {
   applyTheme(savedTheme);
 
   migratePinIfNeeded();
+  migrateWifiPasswords(); // async: migrates _OBF_ XOR passwords to AES-GCM in background
 
   (function() {
     try {
@@ -1600,7 +1624,12 @@ function initEventListeners() {
 
   // ── Font preload → stylesheet ─────────────
   var fontLink = document.querySelector('link[rel="preload"][as="style"]');
-  if (fontLink) { fontLink.onload = function() { this.onload = null; this.rel = 'stylesheet'; }; }
+  if (fontLink) {
+    fontLink.onload = function() { this.onload = null; this.rel = 'stylesheet'; };
+    fontLink.onerror = function() { this.onerror = null; }; // prevent silent failures
+    // Handle already-cached stylesheets where onload may not fire
+    if (fontLink.sheet) { fontLink.onload = null; fontLink.rel = 'stylesheet'; }
+  }
 
   // ── Event delegation for dynamically-rendered settings buttons ────────────
   // Handles data-action buttons generated by renderSettingsApts(), renderAptHouseRules(), etc.

@@ -87,7 +87,12 @@ self.addEventListener('fetch', e => {
         const networkFetch = fetch(e.request).then(response => {
           if (response && response.status === 200 && response.type === 'basic') {
             const c = response.clone();
-            getCache().then(cache => cache.put(e.request, c));
+            getCache().then(cache => cache.put(e.request, c)).then(() => {
+              // Notify all active clients that fresh content is available
+              self.clients.matchAll().then(clients => {
+                clients.forEach(client => client.postMessage({ type: 'CONTENT_UPDATED' }));
+              });
+            });
           }
           return response;
         });
@@ -103,6 +108,10 @@ self.addEventListener('fetch', e => {
         getCache().then(cache => cache.put(e.request, c));
       }
       return response;
+    }).catch(() => {
+      // Offline fallback: return app shell for navigation requests
+      if (e.request.mode === 'navigate') return caches.match('./index.html');
+      return new Response('', { status: 408, statusText: 'Offline' });
     }))
   );
 });
