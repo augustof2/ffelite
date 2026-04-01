@@ -1,0 +1,25 @@
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Editor/IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+
+# Dependencies (future-proofing)
+node_modules/
+
+# Environment
+.env
+.env.local
+
+# Build output
+_site/
+dist/
