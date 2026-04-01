@@ -90,15 +90,27 @@ async function hashPin(pin, existingSalt) {
 
 // Constant-time comparison to prevent timing attacks.
 // Supports legacy plain SHA-256 hashes (64-char hex, no colon) for backward compatibility.
-// On first successful login with an old hash, the caller should re-hash and store PBKDF2 format.
-async function verifyPin(pin, storedHash) {
+// If storageKey is provided and a legacy hash matches, the hash is automatically
+// upgraded to PBKDF2 and saved to localStorage under storageKey.
+async function verifyPin(pin, storedHash, storageKey) {
   if (!storedHash || !pin) return false;
 
   // Legacy: plain SHA-256 (64-char hex, no colon)
   if (/^[a-f0-9]{64}$/.test(storedHash)) {
     const buf    = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pin));
     const legacy = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
-    return legacy === storedHash;
+    if (legacy !== storedHash) return false;
+    // Auto-upgrade: re-hash with PBKDF2 and persist
+    if (storageKey) {
+      try {
+        const newHash = await hashPin(pin);
+        localStorage.setItem(storageKey, newHash);
+        console.log('[pin] Legacy SHA-256 hash auto-upgraded to PBKDF2');
+      } catch (err) {
+        console.warn('[pin] Failed to auto-upgrade legacy hash to PBKDF2:', err);
+      }
+    }
+    return true;
   }
 
   // PBKDF2 format: base64salt:base64hash

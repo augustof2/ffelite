@@ -5,6 +5,8 @@ const DEFAULT_DATA = {
   bbName: "Il Tuo B&B",
   subtitle: "Guest Guide",
   cityZone: "La Tua Città · Zona",
+  pwaName: '',
+  pwaShortName: '',
   hostName: "Nome Host",
   hostPhone: "+39 000 000 0000",
   googleReviewUrl: "",

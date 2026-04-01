@@ -22,7 +22,7 @@ function renderSettingsApts(apts) {
         <div class="s-field"><label>Max ospiti (IT)</label><input type="text" id="s-a${i}-maxGuests" value="${escHtml(apt.maxGuests || '')}"></div>
         <div class="s-field"><label>Max ospiti (EN)</label><input type="text" id="s-a${i}-maxGuestsEn" value="${escHtml(apt.maxGuestsEn || '')}"></div>
         <div class="s-field"><label>WiFi — Nome rete</label><input type="text" id="s-a${i}-wifi" value="${escHtml(apt.wifi || '')}"></div>
-        <div class="s-field"><label>WiFi — Password</label><input type="text" id="s-a${i}-wifiPass" value="${escHtml(deobfuscate(apt.wifiPass || ''))}"></div>
+        <div class="s-field"><label>WiFi — Password</label><input type="text" id="s-a${i}-wifiPass" value=""></div>
         <div class="s-field"><label>Check-in (orario)</label><input type="text" id="s-a${i}-checkin" value="${escHtml(apt.checkin || '')}" placeholder="15:00"></div>
         <div class="s-field"><label>Check-out (orario)</label><input type="text" id="s-a${i}-checkout" value="${escHtml(apt.checkout || '')}" placeholder="10:00"></div>
         <div class="s-divider"></div>
@@ -136,21 +136,30 @@ function renderSettingsApts(apts) {
     renderAptRests(i, apt.restaurants || []);
     renderAptSupermarkets(i, apt.supermarkets || []);
     renderAptCheckoutSteps(i, apt.checkoutSteps || []);
+    // Populate WiFi password field asynchronously (AES-GCM or legacy XOR)
+    decryptWifi(apt.wifiPass || '').then(plain => {
+      const el = document.getElementById(`s-a${i}-wifiPass`);
+      if (el) el.value = plain;
+    });
   });
 }
 
-function collectSettingsApts() {
+async function collectSettingsApts() {
   const container = document.getElementById('s-apts-container');
   const count = parseInt(container.dataset.count || '0');
   const apts = [];
   for (let i = 0; i < count; i++) {
     const apt = {};
-    ['name','address','addressShort','mapsLink','maxGuests','maxGuestsEn','wifi','wifiPass','checkin','checkout','lat','lon',
+    // Collect all text/url fields; wifiPass is encrypted with AES-GCM
+    const plainKeys = ['name','address','addressShort','mapsLink','maxGuests','maxGuestsEn','wifi','checkin','checkout','lat','lon',
      'howToReachIt','howToReachEn','howToAccessIt','howToAccessEn','parkingIt','parkingEn',
-     'bedroomTagsIt','bedroomTagsEn','kitchenTagsIt','kitchenTagsEn','bathroomTagsIt','bathroomTagsEn'].forEach(k => {
+     'bedroomTagsIt','bedroomTagsEn','kitchenTagsIt','kitchenTagsEn','bathroomTagsIt','bathroomTagsEn'];
+    plainKeys.forEach(k => {
       const el = document.getElementById(`s-a${i}-${k}`);
-      if (el) apt[k] = k === 'wifiPass' ? obfuscate(el.value) : el.value; // re-obfuscate WiFi password before storing
+      if (el) apt[k] = el.value;
     });
+    const wifiEl = document.getElementById(`s-a${i}-wifiPass`);
+    apt.wifiPass = wifiEl ? await encryptWifi(wifiEl.value) : '';
     apt.houseRules = collectAptHouseRules(i);
     apt.extraServices = collectAptExtraServices(i);
     apt.places = collectAptPlaces(i);
@@ -164,42 +173,44 @@ function collectSettingsApts() {
 }
 
 function addSettingsApt() {
-  const current = collectSettingsApts();
-  const n = current.length + 1;
-  current.push({
-    name: `Appartamento ${n}`,
-    address: '', addressShort: '', mapsLink: '',
-    maxGuests: '4 persone', maxGuestsEn: '4 people',
-    wifi: '', wifiPass: '',
-    checkin: '15:00', checkout: '10:00',
-    lat: '', lon: '',
-    howToReachIt: '', howToReachEn: '', howToAccessIt: '', howToAccessEn: '', parkingIt: '', parkingEn: '',
-    houseRules: [],
-    bedroomTagsIt: '', bedroomTagsEn: '', kitchenTagsIt: '', kitchenTagsEn: '', bathroomTagsIt: '', bathroomTagsEn: '',
-    extraServices: [],
-    places: [],
-    restaurants: [],
-    supermarkets: [],
-    transport: {
-      airportEnabled: true, airportIcon: '✈️', airportIt: '', airportEn: '', airportMaps: '',
-      stationEnabled: true, stationIcon: '🚉', stationIt: '', stationEn: '', stationMaps: '',
-      metroEnabled: true, metroIcon: '🚇', metroIt: '', metroEn: '', metroMaps: '',
-      busEnabled: true, busIcon: '🚌', busIt: '', busEn: '', busMaps: '',
-      ticketsIt: '', ticketsEn: '', taxiIt: '', taxiEn: ''
-    },
-    checkoutSteps: []
+  collectSettingsApts().then(current => {
+    const n = current.length + 1;
+    current.push({
+      name: `Appartamento ${n}`,
+      address: '', addressShort: '', mapsLink: '',
+      maxGuests: '4 persone', maxGuestsEn: '4 people',
+      wifi: '', wifiPass: '',
+      checkin: '15:00', checkout: '10:00',
+      lat: '', lon: '',
+      howToReachIt: '', howToReachEn: '', howToAccessIt: '', howToAccessEn: '', parkingIt: '', parkingEn: '',
+      houseRules: [],
+      bedroomTagsIt: '', bedroomTagsEn: '', kitchenTagsIt: '', kitchenTagsEn: '', bathroomTagsIt: '', bathroomTagsEn: '',
+      extraServices: [],
+      places: [],
+      restaurants: [],
+      supermarkets: [],
+      transport: {
+        airportEnabled: true, airportIcon: '✈️', airportIt: '', airportEn: '', airportMaps: '',
+        stationEnabled: true, stationIcon: '🚉', stationIt: '', stationEn: '', stationMaps: '',
+        metroEnabled: true, metroIcon: '🚇', metroIt: '', metroEn: '', metroMaps: '',
+        busEnabled: true, busIcon: '🚌', busIt: '', busEn: '', busMaps: '',
+        ticketsIt: '', ticketsEn: '', taxiIt: '', taxiEn: ''
+      },
+      checkoutSteps: []
+    });
+    renderSettingsApts(current);
+    const last = document.getElementById('s-apts-container').lastElementChild;
+    if (last) { last.open = true; last.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
   });
-  renderSettingsApts(current);
-  const last = document.getElementById('s-apts-container').lastElementChild;
-  if (last) { last.open = true; last.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
 }
 
 function removeSettingsApt(idx) {
-  const current = collectSettingsApts();
-  if (current.length <= 1) { alert('Devi avere almeno un appartamento.'); return; }
   if (!confirm(`Eliminare Appartamento ${idx + 1}? Le modifiche non salvate verranno perse.`)) return;
-  current.splice(idx, 1);
-  renderSettingsApts(current);
+  collectSettingsApts().then(current => {
+    if (current.length <= 1) { alert('Devi avere almeno un appartamento.'); return; }
+    current.splice(idx, 1);
+    renderSettingsApts(current);
+  });
 }
 
 // ════════════════════════════════════════════
