@@ -118,6 +118,10 @@ function goBack() {
 // ════════════════════════════════════════════
 //  RENDER APP (guide for an apt)
 // ════════════════════════════════════════════
+function getDisplayableWifiName(apt) {
+  return (apt.wifi === 'NomeRete' || apt.wifi === 'NomeRete2') ? '' : apt.wifi;
+}
+
 function renderApp(aptIndex) {
   const d = currentData;
   const apt = d.apts[aptIndex] || d.apts[0];
@@ -142,7 +146,7 @@ function renderApp(aptIndex) {
   document.getElementById('s-checkin').textContent = apt.checkin;
   document.getElementById('s-checkout').textContent = apt.checkout;
   // Guard: hide default placeholder WiFi name
-  const wifiDisplay = (apt.wifi === 'NomeRete' || apt.wifi === 'NomeRete2') ? '' : apt.wifi;
+  const wifiDisplay = getDisplayableWifiName(apt);
   document.getElementById('s-wifi').textContent = wifiDisplay;
   const sMaps = document.getElementById('s-maps');
   sMaps.href = apt.mapsLink || '#';
@@ -172,11 +176,19 @@ function renderApp(aptIndex) {
   wItEl.innerHTML = renderRichText(langField(d, 'welcome') || '');
   document.getElementById('w-sign').textContent = '★ ' + d.hostName;
 
+  // Home tab — extra services (full-width cards)
+  renderHomeExtraServices(apt);
+
+  // Quick-nav Stay card: show WiFi name as live preview
+  const stayNavDesc = document.querySelector('.quick-nav-card[data-tab="stay"] .quick-nav-desc');
+  if (stayNavDesc) {
+    stayNavDesc.textContent = wifiDisplay ? 'WiFi: ' + wifiDisplay : t('stayDesc');
+  }
+
   // Stay tab
   document.getElementById('st-guests').textContent = langField(apt, 'maxGuests');
   // Guard: hide default placeholder WiFi name and password
-  const isDefaultWifi = apt.wifi === 'NomeRete' || apt.wifi === 'NomeRete2';
-  document.getElementById('st-wifi-name').textContent = isDefaultWifi ? '' : apt.wifi;
+  document.getElementById('st-wifi-name').textContent = getDisplayableWifiName(apt);
   // Decrypt WiFi password asynchronously (AES-GCM or legacy XOR)
   const copyBtn = document.getElementById('copy-wifi-btn');
   if (copyBtn) copyBtn.style.display = 'none';
@@ -387,6 +399,16 @@ function updateLanguageOnly(aptIndex) {
   // Home tab text
   document.getElementById('w-title').textContent = t('welcome');
   document.getElementById('w-text-it').innerHTML = renderRichText(langField(d, 'welcome') || '');
+
+  // Home tab — extra services (language update)
+  renderHomeExtraServices(apt);
+
+  // Quick-nav Stay card: refresh WiFi preview on language change
+  const wifiDisplayLang = getDisplayableWifiName(apt);
+  const stayNavDescLang = document.querySelector('.quick-nav-card[data-tab="stay"] .quick-nav-desc');
+  if (stayNavDescLang) {
+    stayNavDescLang.textContent = wifiDisplayLang ? 'WiFi: ' + wifiDisplayLang : t('stayDesc');
+  }
 
   // Stay tab text
   document.getElementById('st-guests').textContent = langField(apt, 'maxGuests');
@@ -745,6 +767,43 @@ function renderDeparture(d, checkoutSteps) {
       stepsContainer.appendChild(item);
     });
   }
+}
+
+// ════════════════════════════════════════════
+//  HOME TAB — EXTRA SERVICES (full-width cards)
+// ════════════════════════════════════════════
+function renderHomeExtraServices(apt) {
+  const section   = document.getElementById('home-extra-services-section');
+  const container = document.getElementById('home-extra-services');
+  if (!section || !container) return;
+
+  const services = apt.extraServices || [];
+  if (!services.length) {
+    section.classList.add('d-none');
+    return;
+  }
+
+  section.classList.remove('d-none');
+  container.innerHTML = '';
+  services.forEach(svc => {
+    const name = langField(svc, 'name') || '';
+    const desc = langField(svc, 'desc') || '';
+    const a = document.createElement('a');
+    a.className = 'service-item-full';
+    a.href = '#';
+    a.addEventListener('click', function(e) {
+      e.preventDefault();
+      requestService(svc);
+    });
+    a.innerHTML = `
+      <div class="service-icon">${escHtml(svc.icon || '✨')}</div>
+      <div class="service-body">
+        <div class="service-name">${escHtml(name)}</div>
+        <div class="service-desc">${escHtml(desc)}</div>
+      </div>
+      <div class="service-wa-hint">${escHtml(t('waHint'))}</div>`;
+    container.appendChild(a);
+  });
 }
 
 // ════════════════════════════════════════════
