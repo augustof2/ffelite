@@ -100,7 +100,9 @@ function openGuide(aptIndex, lang) {
 }
 
 function switchLang() {
-  setLang(currentLang === 'it' ? 'en' : 'it');
+  const newLang = currentLang === 'it' ? 'en' : 'it';
+  setLang(newLang);
+  if (typeof GuestAnalytics !== 'undefined') GuestAnalytics.trackLang(newLang);
   renderApp(currentAptIndex);
 }
 
@@ -251,6 +253,9 @@ function renderApp(aptIndex) {
       servicesEl.appendChild(a);
     });
   }
+
+  // Checkin Steps
+  renderCheckinSteps(d.checkinSteps || []);
 
   // Places
   renderPlaces(apt.places || []);
@@ -536,6 +541,30 @@ function renderExtraContacts(contacts) {
 }
 
 // ════════════════════════════════════════════
+//  CHECKIN STEPS RENDER
+// ════════════════════════════════════════════
+function renderCheckinSteps(steps) {
+  const container = document.getElementById('checkin-steps-list');
+  if (!container) return;
+  const section = document.getElementById('checkin-steps-section');
+  if (section) section.style.display = steps.length ? '' : 'none';
+  container.innerHTML = '';
+  steps.forEach((step, i) => {
+    const title = langField(step, 'title') || '';
+    const desc  = langField(step, 'desc')  || '';
+    const item  = document.createElement('div');
+    item.className = 'step-item';
+    item.innerHTML = `
+      <div class="step-num">${escHtml(step.icon || String(i + 1))}</div>
+      <div class="step-body">
+        <div class="step-title">${escHtml(title)}</div>
+        <div class="step-desc">${escHtml(desc)}</div>
+      </div>`;
+    container.appendChild(item);
+  });
+}
+
+// ════════════════════════════════════════════
 //  DEPARTURE TAB RENDER
 // ════════════════════════════════════════════
 function renderDeparture(d, checkoutSteps) {
@@ -582,7 +611,10 @@ function requestService(svc) {
 // ════════════════════════════════════════════
 const TAB_IDS = ['home', 'stay', 'places', 'food', 'transport', 'departure'];
 
-function switchTab(tabId) { showTab(tabId); }
+function switchTab(tabId) {
+  showTab(tabId);
+  if (typeof GuestAnalytics !== 'undefined') GuestAnalytics.trackPageView(tabId);
+}
 
 // ════════════════════════════════════════════
 //  WIFI COPY
@@ -1134,6 +1166,20 @@ function initScrollTopBtn() {
 // ════════════════════════════════════════════
 function init() {
   currentData = loadData();
+
+  // Splash screen
+  const splash = document.getElementById('splash-screen');
+  if (splash) {
+    const nameEl = document.getElementById('splash-bbname');
+    if (nameEl) nameEl.textContent = currentData.bbName || 'Guest Guide';
+    setTimeout(function () {
+      splash.classList.add('fade-out');
+      setTimeout(function () { splash.style.display = 'none'; }, 300);
+    }, 1500);
+  }
+
+  // Analytics: track visit on page load
+  if (typeof GuestAnalytics !== 'undefined') GuestAnalytics.trackVisit();
 
   const savedTheme = localStorage.getItem('bnb_theme') ||
     (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');

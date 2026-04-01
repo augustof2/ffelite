@@ -866,6 +866,62 @@ function removeAptCheckoutStep(aptIndex, stepIdx) {
 }
 
 // ════════════════════════════════════════════
+//  SETTINGS: CHECK-IN STEPS
+// ════════════════════════════════════════════
+function renderSettingsCheckinSteps(steps) {
+  const container = document.getElementById('s-checkin-container');
+  if (!container) return;
+  container.dataset.count = steps.length;
+  let html = '';
+  steps.forEach((step, j) => {
+    html += `
+      <div class="s-sub-title s-sub-title-row" style="margin-top:12px">
+        <span>Step ${j + 1}</span>
+        <button class="s-remove-btn" onclick="removeSettingsCheckinStep(${j})">🗑️ Rimuovi</button>
+      </div>
+      <div class="s-field"><label>Emoji</label><input type="text" id="s-ci${j}-icon" value="${escAttr(step.icon || '')}" style="max-width:80px"></div>
+      <div class="s-field"><label>Titolo 🇮🇹</label><input type="text" id="s-ci${j}-titleIt" value="${escAttr(step.titleIt || '')}" onblur="autoTranslateField('s-ci${j}-titleIt','s-ci${j}-titleEn')"></div>
+      <div class="s-field"><label>Titolo 🇬🇧</label><input type="text" id="s-ci${j}-titleEn" value="${escAttr(step.titleEn || '')}"></div>
+      <div class="s-field"><label>Descrizione 🇮🇹</label><textarea id="s-ci${j}-descIt" onblur="autoTranslateField('s-ci${j}-descIt','s-ci${j}-descEn')">${escHtml(step.descIt || '')}</textarea></div>
+      <div class="s-field"><label>Descrizione 🇬🇧</label><textarea id="s-ci${j}-descEn">${escHtml(step.descEn || '')}</textarea></div>`;
+  });
+  container.innerHTML = html;
+}
+
+function collectSettingsCheckinSteps() {
+  const container = document.getElementById('s-checkin-container');
+  if (!container) return [];
+  const count = parseInt(container.dataset.count || '0');
+  const steps = [];
+  for (let j = 0; j < count; j++) {
+    const step = {};
+    ['icon', 'titleIt', 'titleEn', 'descIt', 'descEn'].forEach(k => {
+      const el = document.getElementById(`s-ci${j}-${k}`);
+      if (el) step[k] = k === 'descIt' || k === 'descEn' ? el.value : el.value.trim();
+    });
+    steps.push(step);
+  }
+  return steps;
+}
+
+function addSettingsCheckinStep() {
+  if (parseInt((document.getElementById('s-checkin-container') || {}).dataset.count || '0') >= 6) {
+    showToast('Massimo 6 step check-in.', 'error');
+    return;
+  }
+  const current = collectSettingsCheckinSteps();
+  current.push({ icon: '', titleIt: '', titleEn: '', descIt: '', descEn: '' });
+  renderSettingsCheckinSteps(current);
+}
+
+function removeSettingsCheckinStep(idx) {
+  if (!confirm(`Rimuovere lo step ${idx + 1}?`)) return;
+  const current = collectSettingsCheckinSteps();
+  current.splice(idx, 1);
+  renderSettingsCheckinSteps(current);
+}
+
+// ════════════════════════════════════════════
 // ════════════════════════════════════════════
 //  SETTINGS: DYNAMIC CONTACTS
 // ════════════════════════════════════════════
@@ -948,6 +1004,13 @@ function populateSettingsForms() {
   // Reviews
   renderSettingsReviews(d.reviews || []);
 
+  // Check-in steps
+  renderSettingsCheckinSteps(d.checkinSteps || []);
+
+  // Custom domain
+  const cdEl = document.getElementById('s-customDomain');
+  if (cdEl) cdEl.value = d.customDomain || '';
+
   // Char counters
   initCharCounters();
 
@@ -1016,6 +1079,9 @@ function populateSettingsForms() {
 
   // QR codes
   renderQrSection();
+
+  // Analytics dashboard
+  if (typeof GuestAnalytics !== 'undefined') GuestAnalytics.renderDashboard('an-dashboard');
 }
 
 function collectFormData() {
@@ -1044,6 +1110,13 @@ function collectFormData() {
 
   // Reviews
   d.reviews = collectSettingsReviews();
+
+  // Check-in steps
+  d.checkinSteps = collectSettingsCheckinSteps();
+
+  // Custom domain
+  const cdEl = document.getElementById('s-customDomain');
+  if (cdEl) d.customDomain = cdEl.value.trim();
 
   // Nav Labels
   d.navLabels = {
@@ -1546,4 +1619,27 @@ function clearChangelog() {
   if (!confirm('Cancellare tutto lo storico modifiche?')) return;
   localStorage.removeItem('bnb_changelog');
   renderChangelogSection();
+}
+
+function copyCnameRecord() {
+  const el = document.getElementById('s-customDomain');
+  const domain = el ? el.value.trim() : '';
+  const githubUser = (typeof currentData !== 'undefined' && currentData.qrBaseUrl)
+    ? (currentData.qrBaseUrl.match(/^https?:\/\/([^\/]+)/) || [])[1] || '<username>.github.io'
+    : '<username>.github.io';
+  const text = githubUser;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(() => showToast('📋 Record CNAME copiato!', 'success')).catch(() => showToast('⚠️ Copia fallita.', 'error'));
+  } else {
+    showToast('⚠️ Copia non supportata su questo browser.', 'error');
+  }
+}
+
+function resetAnalytics() {
+  if (!confirm('Azzerare tutti i dati analytics?')) return;
+  if (typeof GuestAnalytics !== 'undefined') {
+    GuestAnalytics.reset();
+    GuestAnalytics.renderDashboard('an-dashboard');
+  }
+  showToast('📊 Analytics azzerati.', 'success');
 }

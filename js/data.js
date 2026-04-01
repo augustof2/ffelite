@@ -79,7 +79,9 @@ const UI_STRINGS = {
     transportTitle: 'Muoversi',
     departureEyebrow: 'È Ora di Partire',
     departureTitle: 'Partenza',
-    langToggle:     '🇬🇧 EN'
+    langToggle:     '🇬🇧 EN',
+    selfCheckin:    'Self Check-in',
+    arrivalInstructions: 'Istruzioni Arrivo'
   },
   en: {
     landingIntro:   'Welcome! Select your apartment to access the complete guide.',
@@ -151,7 +153,9 @@ const UI_STRINGS = {
     transportTitle: 'Getting Around',
     departureEyebrow: 'Time to Leave',
     departureTitle: 'Departure',
-    langToggle:     '🇮🇹 IT'
+    langToggle:     '🇮🇹 IT',
+    selfCheckin:    'Self Check-in',
+    arrivalInstructions: 'Arrival Instructions'
   }
 };
 
@@ -191,6 +195,13 @@ const DEFAULT_DATA = {
   googleReviewUrl: "",
   qrBaseUrl: '',
   supportPhone: '+393450307922',
+  customDomain: '',
+  checkinSteps: [
+    { icon: "📍", titleIt: "Raggiungi l'appartamento", titleEn: "Reach the apartment", descIt: "Segui le indicazioni su Google Maps per raggiungere l'indirizzo.", descEn: "Follow Google Maps directions to reach the address." },
+    { icon: "🔑", titleIt: "Ritira le chiavi", titleEn: "Pick up the keys", descIt: "Le chiavi sono nella cassetta di sicurezza accanto alla porta. Il codice ti è stato inviato via messaggio.", descEn: "Keys are in the lockbox next to the door. The code was sent to you via message." },
+    { icon: "🚪", titleIt: "Entra nell'appartamento", titleEn: "Enter the apartment", descIt: "Apri la porta e fai come se fossi a casa tua!", descEn: "Open the door and make yourself at home!" },
+    { icon: "📶", titleIt: "Connettiti al WiFi", titleEn: "Connect to WiFi", descIt: "Il nome della rete e la password li trovi nella sezione Soggiorno.", descEn: "You can find the network name and password in the Stay section." }
+  ],
   welcomeIt: "Siamo felici di avervi come ospiti! Questo appartamento è stato preparato con cura per rendere il vostro soggiorno indimenticabile. Siamo a vostra disposizione per qualsiasi necessità — non esitate a contattarci.",
   welcomeEn: "We are delighted to have you as our guests! This apartment has been carefully prepared to make your stay unforgettable. We are at your disposal for any need — do not hesitate to contact us.",
   closingTitleIt: "Grazie per aver scelto il nostro B&B!",

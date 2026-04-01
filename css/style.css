@@ -1737,3 +1737,62 @@ html.theme-minimal {
 /* ── OFFLINE INDICATOR ── */
 #offline-banner { display: none; position: fixed; top: 0; left: 0; right: 0; background: var(--accent); color: #fff; text-align: center; padding: 8px 16px; font-size: 0.85rem; z-index: 9998; font-family: Jost, sans-serif; }
 #offline-banner.show { display: block; }
+
+/* ── SPLASH SCREEN ── */
+#splash-screen {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: splashIn 0.4s ease forwards;
+}
+#splash-screen.fade-out { animation: splashOut 0.3s ease forwards; }
+.splash-content { text-align: center; }
+.splash-name {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.8rem, 6vw, 3rem);
+  font-weight: 700;
+  color: var(--gold);
+  margin-bottom: 28px;
+  letter-spacing: 0.02em;
+}
+.splash-bar {
+  width: 160px;
+  height: 4px;
+  background: var(--border);
+  border-radius: 4px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+.splash-bar-fill {
+  height: 100%;
+  width: 0;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--gold2), var(--gold));
+  animation: splashBarAnim 1.5s ease forwards;
+}
+@keyframes splashIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes splashOut { from { opacity: 1; } to { opacity: 0; } }
+@keyframes splashBarAnim { from { width: 0; } to { width: 100%; } }
+
+/* ── ANALYTICS DASHBOARD ── */
+.an-cards-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px; }
+.an-stat-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 14px 12px; text-align: center; }
+.an-stat-value { font-size: 1.6rem; font-weight: 700; color: var(--gold); font-family: 'Playfair Display', serif; line-height: 1; margin-bottom: 4px; }
+.an-stat-label { font-size: 11px; color: var(--text2); }
+.an-section-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 10px; margin-top: 4px; }
+.an-bars { display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; }
+.an-bar-row { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+.an-bar-label { min-width: 80px; color: var(--text2); }
+.an-bar-wrap { flex: 1; height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; }
+.an-bar-fill { height: 100%; background: linear-gradient(90deg, var(--gold2), var(--gold)); border-radius: 4px; transition: width 0.5s ease; min-width: 2px; }
+.an-bar-count { min-width: 28px; text-align: right; color: var(--text2); }
+.an-devices { display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; }
+.an-dev-row { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+.an-dev-label { min-width: 90px; color: var(--text2); }
+.an-dev-count { min-width: 80px; text-align: right; color: var(--text2); font-size: 11px; }
+.an-dates { display: flex; flex-direction: column; gap: 6px; font-size: 12px; color: var(--text2); padding-top: 10px; border-top: 1px solid var(--border); }
+.an-dates strong { color: var(--text); }
