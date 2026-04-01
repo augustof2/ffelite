@@ -155,20 +155,31 @@ const DEFAULT_DATA = {
 
 ```
 guide/
-├── index.html                    ← struttura HTML e shell dell'app
+├── index.html                         ← struttura HTML e shell dell'app
 ├── css/
-│   └── style.css                 ← tutti gli stili
+│   └── style.css                      ← tutti gli stili
 ├── js/
-│   ├── app.js                    ← logica principale e rendering
-│   ├── data.js                   ← dati di default, i18n, utilità
-│   ├── settings.js               ← pannello impostazioni e pubblicazione
-│   ├── weather.js                ← widget meteo (open-meteo API)
-│   └── sw-register.js            ← registrazione Service Worker
-├── sw.js                         ← Service Worker (PWA offline)
-├── manifest.json                 ← PWA manifest
-├── LICENSE                       ← licenza proprietaria commerciale
-├── .nojekyll                     ← disabilita Jekyll su GitHub Pages
-└── .github/workflows/deploy.yml ← auto-deploy su GitHub Pages
+│   ├── app.js                         ← logica principale e rendering
+│   ├── data.js                        ← dati di default e configurazione
+│   ├── i18n.js                        ← stringhe UI, traduzioni IT/EN, t()
+│   ├── utils.js                       ← funzioni di utilità condivise
+│   ├── settings-ui.js                 ← rendering pannello e form
+│   ├── settings-publish.js            ← logica pubblicazione su GitHub Pages
+│   ├── settings-apartments.js         ← gestione multi-appartamento
+│   ├── analytics.js                   ← analytics locale
+│   ├── crypto.js                      ← hashing PIN/credenziali (SHA-256)
+│   ├── qr-lib.js                      ← libreria generazione QR code
+│   ├── weather.js                     ← widget meteo (open-meteo API)
+│   └── sw-register.js                 ← registrazione Service Worker
+├── icon-192.png                       ← icona PWA 192×192
+├── icon-512.png                       ← icona PWA 512×512
+├── sw.js                              ← Service Worker (PWA offline)
+├── manifest.json                      ← PWA manifest
+├── CHANGELOG.md                       ← storico versioni
+├── LICENSE                            ← licenza proprietaria commerciale
+├── .gitignore                         ← file e cartelle da escludere da git
+├── .nojekyll                          ← disabilita Jekyll su GitHub Pages
+└── .github/workflows/deploy.yml      ← auto-deploy su GitHub Pages
 ```
 
 ---
@@ -190,6 +201,75 @@ Il pannello ⚙️ è protetto da **due metodi di accesso** che aprono **pannell
 - **Azioni disponibili:** 💾 Salva e Applica, 🗑️ Reset, 👁️ Anteprima, 🚀 Pubblica Online
 
 Entrambe le credenziali sono hashate con SHA-256 e salvate in `localStorage`. Puoi cambiarle dal pannello Admin → sezione **🔐 Sicurezza**.
+
+---
+
+## 🔧 Primo Setup / First Setup
+
+> Segui questi passi la **prima volta** che configuri il sito.
+> Follow these steps the **first time** you set up the site.
+
+### 1. PIN iniziale / Initial PIN
+
+> ⚠️ **Sicurezza / Security:** Cambia il PIN immediatamente dopo il primo accesso. / Change the PIN immediately after first access.
+
+**IT:** Il PIN predefinito all'installazione è `1234`. Cambialo subito al primo accesso:
+1. Apri il sito nel browser
+2. Clicca **⚙️** (in basso a destra nella landing page)
+3. Inserisci il PIN `1234`
+4. Vai alla sezione **🔐 Sicurezza** nel pannello HOST
+5. Inserisci il nuovo PIN a 4 cifre nel campo "Nuovo PIN" e conferma con **💾 Salva e Applica**
+
+**EN:** The default PIN at installation is `1234`. Change it immediately on first login:
+1. Open the site in your browser
+2. Click **⚙️** (bottom-right on the landing page)
+3. Enter PIN `1234`
+4. Go to the **🔐 Security** section in the HOST panel
+5. Enter your new 4-digit PIN in the "New PIN" field and confirm with **💾 Save & Apply**
+
+---
+
+### 2. Credenziali Admin / Admin Credentials
+
+> ⚠️ **Sicurezza / Security:** Cambia le credenziali admin immediatamente dopo la prima configurazione. Non usare mai le credenziali di default in produzione. / Change admin credentials immediately after initial setup. Never use default credentials in production.
+
+**IT:** Le credenziali admin predefinite sono `admin` / `admin`. Cambiale subito:
+1. Apri il sito nel browser
+2. Clicca **⚙️**, poi **🛡️ Accesso Admin**
+3. Inserisci username `admin` e password `admin`
+4. Nel pannello Admin, vai alla sezione **🔐 Sicurezza**
+5. Modifica **Username Admin** e **Password Admin** con le tue credenziali personalizzate
+6. Clicca **💾 Salva e Applica**, poi **🚀 Pubblica Online** per rendere permanente il cambiamento
+
+**EN:** The default admin credentials are `admin` / `admin`. Change them immediately:
+1. Open the site in your browser
+2. Click **⚙️**, then **🛡️ Admin Access**
+3. Enter username `admin` and password `admin`
+4. In the Admin panel, go to the **🔐 Security** section
+5. Set your custom **Admin Username** and **Admin Password**
+6. Click **💾 Save & Apply**, then **🚀 Publish Online** to make the change permanent
+
+---
+
+### 3. Dove trovare il pannello Admin / Where to find the Admin panel
+
+**IT:** Il pannello Admin si trova cliccando **⚙️** nella landing page → **🛡️ Accesso Admin** (link sotto il campo PIN).
+
+**EN:** The Admin panel is accessed by clicking **⚙️** on the landing page → **🛡️ Admin Access** (link below the PIN field).
+
+---
+
+### 4. Come cambiare PIN e credenziali successivamente / How to change PIN and credentials later
+
+**IT:**
+- **Cambio PIN (Host):** Pannello ⚙️ (HOST) → sezione **🔐 Sicurezza** → "Nuovo PIN"
+- **Cambio credenziali Admin:** Pannello ⚙️ (Admin) → sezione **🔐 Sicurezza** → "Username Admin" e "Password Admin"
+- Dopo ogni modifica: **💾 Salva e Applica** + **🚀 Pubblica Online**
+
+**EN:**
+- **Change PIN (Host):** ⚙️ Panel (HOST) → **🔐 Security** section → "New PIN"
+- **Change Admin credentials:** ⚙️ Panel (Admin) → **🔐 Security** section → "Admin Username" and "Admin Password"
+- After each change: **💾 Save & Apply** + **🚀 Publish Online**
 
 ---
 
@@ -247,12 +327,67 @@ Ogni licenza è valida per **un singolo sito/dominio**.
 
 ---
 
+## 🌐 Compatibilità Browser / Browser Compatibility
+
+**IT:** GuestGuide utilizza API moderne (`crypto.subtle` AES-GCM, `ES6+`, CSS custom properties, unità `dvh`). Di seguito i requisiti minimi.
+
+**EN:** GuestGuide uses modern APIs (`crypto.subtle` AES-GCM, `ES6+`, CSS custom properties, `dvh` units). Below are the minimum requirements.
+
+| Browser | Versione minima / Minimum version |
+|---|---|
+| Chrome / Chromium | 60+ (2017) |
+| Firefox | 63+ (2018) |
+| Safari | 14+ (2020) |
+| Edge (Chromium) | 79+ (2020) |
+| Samsung Internet | 8.2+ (2019) |
+
+### 📱 Note iOS / Safari (ospiti con iPhone / guests on iPhone)
+
+**IT:** Su iOS, `crypto.subtle` richiede un contesto sicuro (HTTPS). Assicurarsi che il sito sia sempre servito via HTTPS (GitHub Pages lo garantisce automaticamente). Safari < 14 non supporta le unità `dvh`, che fanno cadere silenziosamente in fallback. Si consiglia di testare su iOS 15+ per un'esperienza ottimale.
+
+**EN:** On iOS, `crypto.subtle` requires a secure context (HTTPS). Ensure the site is always served over HTTPS (GitHub Pages provides this automatically). Safari < 14 does not support `dvh` units, which silently fall back. Testing on iOS 15+ is recommended for the best experience.
+
+### 🔒 Requisito HTTPS / HTTPS Requirement
+
+**IT:** `crypto.subtle` (usato per l'hashing SHA-256 di PIN e credenziali) e il Service Worker (PWA offline) **richiedono HTTPS**. Su `localhost` funzionano comunque per sviluppo locale. GitHub Pages serve sempre HTTPS — nessuna azione richiesta.
+
+**EN:** `crypto.subtle` (used for SHA-256 hashing of PIN and credentials) and the Service Worker (PWA offline) **require HTTPS**. On `localhost` they still work for local development. GitHub Pages always serves HTTPS — no action needed.
+
+---
+
 ## 🛠️ Tecnologie
 
 - HTML5, CSS3, JavaScript vanilla
 - Google Fonts (Playfair Display + Jost)
 - Nessuna dipendenza esterna oltre ai font
 - `localStorage` per il salvataggio delle personalizzazioni
+
+---
+
+## 🌍 Architettura i18n / i18n Architecture
+
+**IT:** Il sistema bilingue attuale (IT/EN) usa campi duplicati per ogni contenuto localizzabile: `titleIt`/`titleEn`, `descIt`/`descEn`, ecc. La funzione `t(obj, 'title')` risolve il campo corretto in base alla lingua selezionata (`window.currentLang`).
+
+**EN:** The current bilingual system (IT/EN) uses duplicated fields for each localizable piece of content: `titleIt`/`titleEn`, `descIt`/`descEn`, etc. The `t(obj, 'title')` function resolves the correct field based on the selected language (`window.currentLang`).
+
+### Struttura attuale / Current structure
+
+```javascript
+// Esempio campo localizzato / Example localized field
+{
+  titleIt: "Duomo di Milano",
+  titleEn: "Milan Cathedral",
+  descIt: "La cattedrale gotica più grande d'Italia.",
+  descEn: "The largest Gothic cathedral in Italy."
+}
+// Risoluzione / Resolution: t(obj, 'title') → titleIt o titleEn
+```
+
+### Piano per future lingue / Plan for future languages
+
+**IT:** Per aggiungere in futuro lingue aggiuntive (FR, DE, ES) senza riscrivere tutto il codice, la struttura consigliata sarebbe migrare verso oggetti `title: { it: "...", en: "...", fr: "..." }` e aggiornare `t()` per accedere a `obj[field][lang]`. Questo richiederebbe una migrazione dei dati in `loadData()` e l'aggiornamento di tutti i form di editing nel pannello admin.
+
+**EN:** To add additional languages in the future (FR, DE, ES) without rewriting all the code, the recommended approach would be to migrate to `title: { it: "...", en: "...", fr: "..." }` objects and update `t()` to access `obj[field][lang]`. This would require a data migration in `loadData()` and updating all editing forms in the admin panel.
 
 ---
 
