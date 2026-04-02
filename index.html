@@ -28,6 +28,7 @@
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+<a href="#guide-content" class="skip-link">Salta al contenuto</a>
 <!-- Splash Screen -->
 <div id="splash-screen">
   <div class="splash-content">
@@ -84,6 +85,11 @@
     <button class="back-btn" aria-label="Torna indietro">←</button>
     <div class="guide-apt-name" id="guide-apt-name">Appartamento 1</div>
     <button class="lang-toggle-btn" id="lang-toggle-btn">🇬🇧 EN</button>
+    <div class="font-size-ctrl" id="font-size-ctrl" aria-label="Dimensione testo">
+      <button class="fs-btn" data-size="small" aria-label="Testo piccolo" title="Testo piccolo">A-</button>
+      <button class="fs-btn active" data-size="normal" aria-label="Testo normale" title="Testo normale">A</button>
+      <button class="fs-btn" data-size="large" aria-label="Testo grande" title="Testo grande">A+</button>
+    </div>
   </div>
 
   <div class="guide-content" id="guide-content">
@@ -550,6 +556,19 @@
             <span>Minimal</span>
           </div>
         </div>
+        <div class="s-divider"></div>
+        <div class="s-sub-title">Aa Dimensione Testo</div>
+        <div class="font-size-options" id="s-font-size-options">
+          <button class="fs-option-btn" data-size="small">A- Piccolo (14px)</button>
+          <button class="fs-option-btn active" data-size="normal">A Normale (16px)</button>
+          <button class="fs-option-btn" data-size="large">A+ Grande (18px)</button>
+        </div>
+        <div class="s-divider"></div>
+        <div class="s-sub-title">♿ Alto Contrasto</div>
+        <label class="s-toggle-row">
+          <span>Attiva Alto Contrasto</span>
+          <input type="checkbox" id="s-high-contrast" class="s-toggle">
+        </label>
       </div>
     </details>
 
@@ -737,6 +756,21 @@
       </div>
     </details>
 
+    <!-- Versioning / Rollback (admin-only) -->
+    <details class="s-section admin-only">
+      <summary class="s-section-title">📦 Versioning</summary>
+      <div class="s-fields">
+        <p style="font-size:12px;color:var(--text2);margin-bottom:12px;line-height:1.5">Snapshot automatici dei dati. Massimo 20 snapshot.</p>
+        <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+          <button class="s-btn" id="snap-import-btn">📥 Importa Snapshot</button>
+          <button class="s-btn danger" id="snap-reset-btn">🗑️ Elimina tutti</button>
+          <span id="snap-storage-info" style="font-size:11px;color:var(--text2);align-self:center"></span>
+        </div>
+        <input type="file" id="snap-import-input" accept=".json" style="display:none">
+        <div id="versioning-list"><!-- populated by JS --></div>
+      </div>
+    </details>
+
     <!-- Self Check-in -->
     <details class="s-section">
       <summary class="s-section-title">📅 Self Check-in</summary>
@@ -769,6 +803,21 @@
           <li>Attendi la propagazione DNS (fino a 24h)</li>
           <li>Abilita <strong>"Enforce HTTPS"</strong></li>
         </ol>
+      </div>
+    </details>
+
+    <!-- Multi-struttura (admin-only) -->
+    <details class="s-section admin-only">
+      <summary class="s-section-title">🏢 Multi-struttura</summary>
+      <div class="s-fields">
+        <p style="font-size:12px;color:var(--text2);margin-bottom:12px;line-height:1.5">Gestisci più strutture dallo stesso sito. Ogni struttura ha dati indipendenti.</p>
+        <div id="mt-properties-list"><!-- populated by JS --></div>
+        <div class="s-divider"></div>
+        <div class="s-sub-title">➕ Nuova Struttura</div>
+        <div class="s-field"><label>ID (solo lettere minuscole, trattini)</label><input type="text" id="mt-new-id" placeholder="es. villa-roma" pattern="[a-z0-9_-]+"></div>
+        <div class="s-field"><label>Nome</label><input type="text" id="mt-new-name" placeholder="es. Villa Roma"></div>
+        <button class="s-btn" id="mt-create-btn">➕ Crea Struttura</button>
+        <div id="mt-msg" style="font-size:12px;min-height:18px;margin-top:8px"></div>
       </div>
     </details>
 
@@ -862,6 +911,8 @@
 <script defer src="js/settings-apartments.js"></script>
 <script defer src="js/settings-ui.js"></script>
 <script defer src="js/settings-publish.js"></script>
+<script defer src="js/settings-multitenant.js"></script>
+<script defer src="js/settings-versioning.js"></script>
 <script defer src="js/weather.js"></script>
 <script defer src="js/sw-register.js"></script>
 </body>
