@@ -314,7 +314,7 @@ const PUBLISHED_DATA = {
       "kitchenTagsEn": "Cooktop,Oven,Refrigerator,Dishwasher,Coffee maker,Microwave",
       "bathroomTagsIt": "Doccia,Asciugamani,Phon,Prodotti igiene",
       "bathroomTagsEn": "Shower,Towels,Hairdryer, Hygiene products",
-      "wifiPass": "_AESGCM_Wj5lDt+WLrES/Hr6sK2i04doH/KPw5VUCrfklvupCJf0AevWEOc=",
+      "wifiPass": "_AESGCM_I2aXWdb87Da2Tws3QY5FZsJgvYGvyWpW+4cHCxlPOVZ1n1MvkkA=",
       "houseRules": [
         {
           "icon": "🔇",
@@ -611,17 +611,17 @@ let settingsDirty = false;
 let pinBuffer = '';
 const PIN_KEY = 'bnb_admin_pin';
 /* DEFAULT_PIN_HASH_START */
-const DEFAULT_PIN_HASH = deobfuscateHash('Pm45Y2NoYmJpPmhraGM/bWhjaGI5OG08OTtjYj5sODs5OD9oPj9tODk7aWhrPzltPm1qY28+PG8/a2ptYmM8aw==');
+const DEFAULT_PIN_HASH = deobfuscateHash('dRAxHDwNCmI5OG4RCRcNFW09dS51LWdnYDQRIi00FypsCSoWMC8NDzsdbRgUOzg5OHEiHGowFG8tAy49aBkSOChraWpn');
 /* DEFAULT_PIN_HASH_END */
 
 // Login credentials state
 const USER_KEY = 'bnb_admin_user';
 const PASS_KEY = 'bnb_admin_pass';
 /* DEFAULT_USER_HASH_START */
-const DEFAULT_USER_HASH = deobfuscateHash('YjlsY21sP284b25ram5rbzg+P2NqYjg+bj4/P2tvPjw4a2xtO2M5Ym1pPDluODhiO2JrPGw8aDs4bm5iO2NrYg==');
+const DEFAULT_USER_HASH = deobfuscateHash('NTU9GDQtDSwCbyg9dR49YwAZHDEJG2dnYBNsCD84Eh4+CQwQNTYrFBg1D2kqPGNtMDUZPj4DbRFtKx8xGS4/EwBtDgNn');
 /* DEFAULT_USER_HASH_END */
 /* DEFAULT_PASS_HASH_START */
-const DEFAULT_PASS_HASH = deobfuscateHash('YjlsY21sP284b25ram5rbzg+P2NqYjg+bj4/P2tvPjw4a2xtO2M5Ym1pPDluODhiO2JrPGw8aDs4bm5iO2NrYg==');
+const DEFAULT_PASS_HASH = deobfuscateHash('PwkVAwAfFRRuGW4JNDkbGBsoFA4rG2dnYBYdAysqaQIXHWw8LjETH2k5YxkNMwlxcTM9PAkXLG8uAjURHD0IDxA8dR9n');
 /* DEFAULT_PASS_HASH_END */
 
 const RECOVERY_KEY = 'bnb_recovery_hash';
