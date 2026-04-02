@@ -316,15 +316,11 @@ function renderApp(aptIndex) {
   // Google Review Button
   const reviewUrl = d.googleReviewUrl || '';
   const reviewContainer = document.getElementById('google-review-btn-container');
-  const homeReviewSection = document.getElementById('home-review-section');
   if (reviewUrl) {
     document.getElementById('google-review-btn').href = reviewUrl;
     reviewContainer.style.display = '';
-    document.getElementById('home-review-btn').href = reviewUrl;
-    homeReviewSection.style.display = 'block';
   } else {
     reviewContainer.style.display = 'none';
-    homeReviewSection.style.display = 'none';
   }
 
   // Reviews
@@ -1514,7 +1510,7 @@ function initScrollTopBtn() {
 // ════════════════════════════════════════════
 function updateDynamicManifest() {
   const d = currentData;
-  if (!d || !d.bbName || d.bbName === 'Il Tuo B&B') return; // keep static manifest for unconfigured
+  if (!d) return;
   // Use dedicated pwaName/pwaShortName fields when set, fall back to bbName
   const manifestName      = (d.pwaName      && d.pwaName.trim())      ? d.pwaName.trim()      : (d.bbName || 'Guest Guide') + ' — Guida';
   const manifestShortName = (d.pwaShortName && d.pwaShortName.trim()) ? d.pwaShortName.trim() : d.bbName || 'Guida';
@@ -1858,7 +1854,7 @@ function initEventListeners() {
     const href = a.href || '';
     if (a.classList.contains('google-maps-btn') || href.includes('google.com/maps') || href.includes('maps.google')) {
       GuestAnalytics.trackExternalClick('maps');
-    } else if (a.id === 'google-review-btn' || a.id === 'home-review-btn' || href.includes('g.page/r') || href.includes('search.google.com/local')) {
+    } else if (a.id === 'google-review-btn' || href.includes('g.page/r') || href.includes('search.google.com/local')) {
       GuestAnalytics.trackExternalClick('review');
     }
   });
