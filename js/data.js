@@ -244,7 +244,7 @@ const PUBLISHED_DATA = {
   "cityZone": "Roma",
   "theme": "dark",
   "pwaName": "Guida - FF Elite Apartments",
-  "pwaShortName": "Guida- FF Elite",
+  "pwaShortName": "Guida - FF Elite",
   "hostName": "Nicolò",
   "hostPhone": "+393342177311",
   "googleReviewUrl": "https://g.page/r/CZvIjdaReVG_EBM/review",
@@ -313,7 +313,7 @@ const PUBLISHED_DATA = {
       "kitchenTagsEn": "Cooktop,Oven,Refrigerator,Dishwasher,Coffee maker,Microwave",
       "bathroomTagsIt": "Doccia,Asciugamani,Phon,Prodotti igiene",
       "bathroomTagsEn": "Shower,Towels,Hairdryer, Hygiene products",
-      "wifiPass": "_AESGCM_pz8YP8eIKDQ8s/DmkEvR8YwdE/ZZh5q6dSV5ZGX69qcVAQg+Cbs=",
+      "wifiPass": "_AESGCM_iYlZkF4FK4qk2bNn5Eu0ywNu2svh5b6tJzds6Msjh53GzPu1o0w=",
       "houseRules": [
         {
           "icon": "🔇",
@@ -581,23 +581,23 @@ const PUBLISHED_DATA = {
       "stars": 5,
       "textIt": "Appartamento bellissimo, pulito e in posizione perfetta! L'host è stato molto disponibile",
       "textEn": "Beautiful apartment, clean and perfectly located! The host was very helpful",
-      "date": "2026-01-14",
-      "platform": "airbnb"
+      "date": "",
+      "platform": "google"
     },
     {
       "author": "John Sa",
       "stars": 5,
       "textIt": "Esperienza fantastica! Torneremo sicuramente",
       "textEn": "Fantastic experience! We will definitely come back",
-      "date": "2026-01-27",
-      "platform": "booking"
+      "date": "",
+      "platform": "google"
     },
     {
       "author": "Sophie L",
       "stars": 5,
       "textIt": "Tutto perfetto, dalla pulizia all'accoglienza. Consigliatissimo",
       "textEn": "Everything was perfect, from cleanliness to hospitality. Highly recommended",
-      "date": "2026-01-02",
+      "date": "",
       "platform": "google"
     }
   ]
